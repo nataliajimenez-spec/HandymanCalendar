@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useTransition } from "react";
+import Link from "next/link";
 import { createJob } from "../actions";
 import { PropertyUnitSelect } from "@/components/PropertyUnitSelect";
 
@@ -34,9 +35,9 @@ export function JobForm({
     return (
       <div className="text-sm text-gray-600">
         Primero crea una propiedad en{" "}
-        <a href="/propiedades" className="text-blue-600 underline">
+        <Link href="/propiedades" className="text-blue-600 underline">
           Propiedades
-        </a>
+        </Link>
         .
       </div>
     );
