@@ -1,0 +1,198 @@
+// Handyman Calendar — data model
+// Postgres (Supabase/Neon) via Prisma ORM.
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  // Supabase/Neon pooled connections need a second, non-pooled URL for
+  // migrations (see .env.example). Omit directUrl if your provider doesn't
+  // need it.
+  directUrl = env("DIRECT_URL")
+}
+
+// ---------------------------------------------------------------------------
+// Users & roles
+// ---------------------------------------------------------------------------
+
+enum Role {
+  ADMIN
+  OFICINA
+  HANDYMAN
+}
+
+model User {
+  id           String   @id @default(cuid())
+  name         String
+  email        String   @unique
+  passwordHash String
+  role         Role     @default(HANDYMAN)
+  active       Boolean  @default(true)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  jobsCreated   Job[]         @relation("JobCreatedBy")
+  jobsCancelled Job[]         @relation("JobCancelledBy")
+  lineItems     JobLineItem[] @relation("LineItemCreatedBy")
+  media         JobMedia[]    @relation("MediaUploadedBy")
+
+  @@map("users")
+}
+
+// ---------------------------------------------------------------------------
+// Properties & units
+// ---------------------------------------------------------------------------
+
+model Property {
+  id        String   @id @default(cuid())
+  name      String
+  address   String?
+  notes     String?
+  active    Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  units Unit[]
+  jobs  Job[]
+
+  @@map("properties")
+}
+
+model Unit {
+  id         String   @id @default(cuid())
+  propertyId String
+  label      String // e.g. "Apto 3B", "Oficina 2"
+  notes      String?
+  active     Boolean  @default(true)
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  property Property @relation(fields: [propertyId], references: [id], onDelete: Cascade)
+  jobs     Job[]
+
+  @@unique([propertyId, label])
+  @@map("units")
+}
+
+// ---------------------------------------------------------------------------
+// Price catalog (materials & labor)
+// ---------------------------------------------------------------------------
+
+enum CatalogType {
+  MATERIAL
+  LABOR
+}
+
+model PriceCatalogItem {
+  id        String      @id @default(cuid())
+  type      CatalogType
+  name      String
+  unitLabel String // "galón", "unidad", "hora", "pie", etc.
+  unitPrice Decimal     @db.Decimal(10, 2)
+  sku       String?
+  active    Boolean     @default(true)
+  createdAt DateTime    @default(now())
+  updatedAt DateTime    @updatedAt
+
+  lineItems JobLineItem[]
+
+  @@map("price_catalog_items")
+}
+
+// ---------------------------------------------------------------------------
+// Jobs
+// ---------------------------------------------------------------------------
+
+enum JobStatus {
+  SCHEDULED
+  COMPLETED
+  CANCELLED
+}
+
+model Job {
+  id              String    @id @default(cuid())
+  propertyId      String
+  unitId          String?
+  title           String
+  description     String?
+  scheduledAt     DateTime
+  status          JobStatus @default(SCHEDULED)
+  completionNotes String?
+  completedAt     DateTime?
+
+  createdById String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  cancelledById String?
+  cancelledAt   DateTime?
+  cancelReason  String?
+
+  property    Property @relation(fields: [propertyId], references: [id], onDelete: Restrict)
+  unit        Unit?    @relation(fields: [unitId], references: [id], onDelete: SetNull)
+  createdBy   User     @relation("JobCreatedBy", fields: [createdById], references: [id], onDelete: Restrict)
+  cancelledBy User?    @relation("JobCancelledBy", fields: [cancelledById], references: [id], onDelete: SetNull)
+
+  lineItems JobLineItem[]
+  media     JobMedia[]
+
+  @@index([scheduledAt])
+  @@index([propertyId])
+  @@index([status])
+  @@map("jobs")
+}
+
+// A single billable line on a job: either a material (quantity x unit price)
+// or labor/time (hours x hourly rate). Catalog values are snapshotted onto
+// the line item at creation time so historical costs never move if the
+// catalog changes later, but can still be edited manually per job.
+model JobLineItem {
+  id            String      @id @default(cuid())
+  jobId         String
+  type          CatalogType
+  catalogItemId String?
+  description   String
+  quantity      Decimal     @db.Decimal(10, 2)
+  unitPrice     Decimal     @db.Decimal(10, 2)
+  note          String?
+
+  createdById String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  job         Job               @relation(fields: [jobId], references: [id], onDelete: Cascade)
+  catalogItem PriceCatalogItem? @relation(fields: [catalogItemId], references: [id], onDelete: SetNull)
+  createdBy   User              @relation("LineItemCreatedBy", fields: [createdById], references: [id], onDelete: Restrict)
+
+  @@index([jobId])
+  @@map("job_line_items")
+}
+
+// ---------------------------------------------------------------------------
+// Job media (photos/video) — stored in cloud blob storage, only URL here.
+// ---------------------------------------------------------------------------
+
+enum MediaType {
+  PHOTO
+  VIDEO
+}
+
+model JobMedia {
+  id       String    @id @default(cuid())
+  jobId    String
+  type     MediaType
+  url      String
+  fileName String?
+
+  uploadedById String
+  createdAt    DateTime @default(now())
+
+  job        Job  @relation(fields: [jobId], references: [id], onDelete: Cascade)
+  uploadedBy User @relation("MediaUploadedBy", fields: [uploadedById], references: [id], onDelete: Restrict)
+
+  @@index([jobId])
+  @@map("job_media")
+}
