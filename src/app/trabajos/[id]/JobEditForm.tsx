@@ -1,0 +1,110 @@
+"use client";
+
+import { useState, useTransition } from "react";
+import { updateJob } from "../actions";
+import { PropertyUnitSelect } from "@/components/PropertyUnitSelect";
+
+type PropertyOption = {
+  id: string;
+  name: string;
+  units: { id: string; label: string }[];
+};
+
+export function JobEditForm({
+  jobId,
+  properties,
+  title,
+  description,
+  scheduledAtLocal,
+  propertyId,
+  unitId,
+}: {
+  jobId: string;
+  properties: PropertyOption[];
+  title: string;
+  description: string | null;
+  scheduledAtLocal: string;
+  propertyId: string;
+  unitId: string | null;
+}) {
+  const [error, setError] = useState<string | null>(null);
+  const [saved, setSaved] = useState(false);
+  const [isPending, startTransition] = useTransition();
+
+  function handleSubmit(formData: FormData) {
+    setError(null);
+    setSaved(false);
+    startTransition(async () => {
+      const result = await updateJob(jobId, formData);
+      if (result?.error) setError(result.error);
+      else setSaved(true);
+    });
+  }
+
+  return (
+    <form action={handleSubmit} className="bg-white border rounded-lg p-4 space-y-3">
+      <h2 className="font-medium">Editar trabajo</h2>
+
+      {error && (
+        <div className="text-sm text-red-600 bg-red-50 border border-red-200 rounded px-3 py-2">
+          {error}
+        </div>
+      )}
+      {saved && <div className="text-sm text-green-700">Guardado.</div>}
+
+      <PropertyUnitSelect
+        properties={properties}
+        defaultPropertyId={propertyId}
+        defaultUnitId={unitId ?? undefined}
+      />
+
+      <div className="space-y-1">
+        <label className="text-sm font-medium" htmlFor="title">
+          Título
+        </label>
+        <input
+          id="title"
+          name="title"
+          required
+          defaultValue={title}
+          className="w-full border rounded px-3 py-2 text-sm"
+        />
+      </div>
+
+      <div className="space-y-1">
+        <label className="text-sm font-medium" htmlFor="description">
+          Descripción
+        </label>
+        <textarea
+          id="description"
+          name="description"
+          rows={3}
+          defaultValue={description ?? ""}
+          className="w-full border rounded px-3 py-2 text-sm"
+        />
+      </div>
+
+      <div className="space-y-1">
+        <label className="text-sm font-medium" htmlFor="scheduledAt">
+          Fecha y hora
+        </label>
+        <input
+          id="scheduledAt"
+          name="scheduledAt"
+          type="datetime-local"
+          required
+          defaultValue={scheduledAtLocal}
+          className="w-full border rounded px-3 py-2 text-sm"
+        />
+      </div>
+
+      <button
+        type="submit"
+        disabled={isPending}
+        className="bg-blue-600 text-white rounded px-4 py-2 text-sm font-medium disabled:opacity-50"
+      >
+        {isPending ? "Guardando..." : "Guardar cambios"}
+      </button>
+    </form>
+  );
+}
