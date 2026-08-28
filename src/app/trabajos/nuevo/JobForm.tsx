@@ -44,9 +44,9 @@ export function JobForm({
   }
 
   return (
-    <form action={handleSubmit} className="bg-white border rounded-lg p-4 space-y-3 max-w-md">
+    <form action={handleSubmit} className="card p-4 space-y-3 max-w-md">
       {error && (
-        <div className="text-sm text-red-600 bg-red-50 border border-red-200 rounded px-3 py-2">
+        <div className="alert-error">
           {error}
         </div>
       )}
@@ -62,7 +62,7 @@ export function JobForm({
           name="title"
           required
           placeholder="Ej. Reparar fuga en baño"
-          className="w-full border rounded px-3 py-2 text-sm"
+          className="input-field"
         />
       </div>
 
@@ -74,7 +74,7 @@ export function JobForm({
           id="description"
           name="description"
           rows={3}
-          className="w-full border rounded px-3 py-2 text-sm"
+          className="input-field"
         />
       </div>
 
@@ -88,14 +88,14 @@ export function JobForm({
           type="datetime-local"
           required
           defaultValue={defaultDateTime}
-          className="w-full border rounded px-3 py-2 text-sm"
+          className="input-field"
         />
       </div>
 
       <button
         type="submit"
         disabled={isPending}
-        className="w-full bg-blue-600 text-white rounded py-2 text-sm font-medium disabled:opacity-50"
+        className="w-full btn-primary"
       >
         {isPending ? "Agendando..." : "Agendar trabajo"}
       </button>

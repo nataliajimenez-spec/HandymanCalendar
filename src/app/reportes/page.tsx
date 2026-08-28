@@ -33,7 +33,7 @@ export default async function ReportesPage({
         </p>
       </div>
 
-      <form className="flex flex-wrap items-end gap-2 bg-white border rounded-lg p-4">
+      <form className="flex flex-wrap items-end gap-2 card p-4">
         <div className="space-y-1">
           <label className="text-sm font-medium" htmlFor="start">
             Desde
@@ -43,7 +43,7 @@ export default async function ReportesPage({
             name="start"
             type="date"
             defaultValue={startStr}
-            className="border rounded px-3 py-2 text-sm"
+            className="input-field-sm"
           />
         </div>
         <div className="space-y-1">
@@ -55,15 +55,15 @@ export default async function ReportesPage({
             name="end"
             type="date"
             defaultValue={endStr}
-            className="border rounded px-3 py-2 text-sm"
+            className="input-field-sm"
           />
         </div>
-        <button type="submit" className="bg-blue-600 text-white rounded px-4 py-2 text-sm font-medium">
+        <button type="submit" className="btn-primary">
           Generar reporte
         </button>
         <Link
           href={`/api/reportes/export?start=${startStr}&end=${endStr}`}
-          className="border rounded px-4 py-2 text-sm font-medium hover:bg-gray-50"
+          className="btn-secondary"
         >
           Exportar CSV
         </Link>
@@ -75,14 +75,14 @@ export default async function ReportesPage({
       </div>
 
       {properties.length === 0 && (
-        <div className="text-sm text-gray-500 bg-white border rounded-lg p-6">
+        <div className="text-sm text-gray-500 card p-6">
           No hay trabajos completados en este rango de fechas.
         </div>
       )}
 
       <div className="space-y-4">
         {properties.map((property) => (
-          <div key={property.propertyId} className="bg-white border rounded-lg overflow-hidden">
+          <div key={property.propertyId} className="card overflow-hidden">
             <div className="flex items-center justify-between bg-gray-50 px-4 py-2 border-b">
               <h2 className="font-medium">{property.propertyName}</h2>
               <span className="text-sm font-semibold">{formatMoney(property.subtotal)}</span>

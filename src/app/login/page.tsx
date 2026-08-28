@@ -1,8 +1,15 @@
 "use client";
 
-import { FormEvent, Suspense, useState } from "react";
+import { FormEvent, Suspense, useState, useTransition } from "react";
 import { signIn } from "next-auth/react";
 import { useRouter, useSearchParams } from "next/navigation";
+
+const DEMO_ACCOUNTS = [
+  { label: "Administrador", email: "admin@pmipuertorico.com", emoji: "🗂️" },
+  { label: "Oficina", email: "oficina@pmipuertorico.com", emoji: "🏢" },
+  { label: "Handyman", email: "handyman@pmipuertorico.com", emoji: "🛠️" },
+];
+const DEMO_PASSWORD = "CambiaEsta123!";
 
 function LoginForm() {
   const router = useRouter();
@@ -13,19 +20,17 @@ function LoginForm() {
   const [password, setPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
+  const [demoPending, startDemoTransition] = useTransition();
+  const [demoLoadingEmail, setDemoLoadingEmail] = useState<string | null>(null);
 
-  async function handleSubmit(e: FormEvent) {
-    e.preventDefault();
+  async function doSignIn(emailValue: string, passwordValue: string) {
     setError(null);
-    setLoading(true);
 
     const res = await signIn("credentials", {
-      email,
-      password,
+      email: emailValue,
+      password: passwordValue,
       redirect: false,
     });
-
-    setLoading(false);
 
     if (res?.error) {
       setError("Email o contraseña incorrectos.");
@@ -36,61 +41,92 @@ function LoginForm() {
     router.refresh();
   }
 
+  async function handleSubmit(e: FormEvent) {
+    e.preventDefault();
+    setLoading(true);
+    await doSignIn(email, password);
+    setLoading(false);
+  }
+
+  function handleDemoLogin(demoEmail: string) {
+    setDemoLoadingEmail(demoEmail);
+    startDemoTransition(async () => {
+      await doSignIn(demoEmail, DEMO_PASSWORD);
+      setDemoLoadingEmail(null);
+    });
+  }
+
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50 px-4">
-      <form
-        onSubmit={handleSubmit}
-        className="w-full max-w-sm bg-white border rounded-lg shadow-sm p-6 space-y-4"
-      >
-        <div className="text-center space-y-1">
-          <h1 className="text-xl font-semibold">🛠️ Handyman PMI PR</h1>
-          <p className="text-sm text-gray-500">Inicia sesión para continuar</p>
-        </div>
-
-        {error && (
-          <div className="text-sm text-red-600 bg-red-50 border border-red-200 rounded px-3 py-2">
-            {error}
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 via-white to-gray-100 px-4 py-10">
+      <div className="w-full max-w-sm space-y-4">
+        <form onSubmit={handleSubmit} className="card p-6 sm:p-7 space-y-4">
+          <div className="text-center space-y-1.5">
+            <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-2xl bg-blue-600 text-2xl shadow-sm">
+              🛠️
+            </div>
+            <h1 className="text-lg font-semibold text-gray-900">Handyman PMI PR</h1>
+            <p className="text-sm text-gray-500">Inicia sesión para continuar</p>
           </div>
-        )}
 
-        <div className="space-y-1">
-          <label className="text-sm font-medium" htmlFor="email">
-            Email
-          </label>
-          <input
-            id="email"
-            type="email"
-            required
-            autoComplete="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            className="w-full border rounded px-3 py-2 text-sm"
-          />
+          {error && <div className="alert-error">{error}</div>}
+
+          <div className="space-y-1">
+            <label className="field-label" htmlFor="email">
+              Email
+            </label>
+            <input
+              id="email"
+              type="email"
+              required
+              autoComplete="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              className="input-field"
+            />
+          </div>
+
+          <div className="space-y-1">
+            <label className="field-label" htmlFor="password">
+              Contraseña
+            </label>
+            <input
+              id="password"
+              type="password"
+              required
+              autoComplete="current-password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              className="input-field"
+            />
+          </div>
+
+          <button type="submit" disabled={loading} className="w-full btn-primary">
+            {loading ? "Entrando..." : "Entrar"}
+          </button>
+        </form>
+
+        <div className="card p-4 space-y-2">
+          <p className="text-center text-xs font-medium uppercase tracking-wide text-gray-400">
+            Acceso demo
+          </p>
+          <div className="grid grid-cols-3 gap-2">
+            {DEMO_ACCOUNTS.map((account) => (
+              <button
+                key={account.email}
+                type="button"
+                disabled={demoPending}
+                onClick={() => handleDemoLogin(account.email)}
+                className="btn-secondary flex-col gap-1 py-2.5 text-xs disabled:opacity-50"
+              >
+                <span className="text-lg leading-none">{account.emoji}</span>
+                <span>
+                  {demoLoadingEmail === account.email ? "Entrando..." : account.label}
+                </span>
+              </button>
+            ))}
+          </div>
         </div>
-
-        <div className="space-y-1">
-          <label className="text-sm font-medium" htmlFor="password">
-            Contraseña
-          </label>
-          <input
-            id="password"
-            type="password"
-            required
-            autoComplete="current-password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            className="w-full border rounded px-3 py-2 text-sm"
-          />
-        </div>
-
-        <button
-          type="submit"
-          disabled={loading}
-          className="w-full bg-blue-600 text-white rounded py-2 text-sm font-medium disabled:opacity-50"
-        >
-          {loading ? "Entrando..." : "Entrar"}
-        </button>
-      </form>
+      </div>
     </div>
   );
 }

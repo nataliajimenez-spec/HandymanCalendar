@@ -27,20 +27,20 @@ export function UnitForm({ propertyId }: { propertyId: string }) {
           name="label"
           required
           placeholder="Ej. Apto 2B"
-          className="w-full border rounded px-3 py-2 text-sm"
+          className="input-field"
         />
       </div>
       <div className="flex-1 min-w-[160px]">
         <input
           name="notes"
           placeholder="Notas (opcional)"
-          className="w-full border rounded px-3 py-2 text-sm"
+          className="input-field"
         />
       </div>
       <button
         type="submit"
         disabled={isPending}
-        className="bg-blue-600 text-white rounded px-4 py-2 text-sm font-medium disabled:opacity-50"
+        className="btn-primary"
       >
         {isPending ? "Agregando..." : "Agregar unidad"}
       </button>

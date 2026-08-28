@@ -33,12 +33,12 @@ export function CompleteForm({
         rows={3}
         defaultValue={defaultNotes ?? ""}
         placeholder="Ej. Se reemplazó la tubería y se probó que no hay fugas."
-        className="w-full border rounded px-3 py-2 text-sm"
+        className="input-field"
       />
       <button
         type="submit"
         disabled={isPending}
-        className="w-full sm:w-auto bg-green-600 text-white rounded px-4 py-2 text-sm font-medium disabled:opacity-50"
+        className="btn-success w-full sm:w-auto"
       >
         {isPending ? "Guardando..." : "Marcar trabajo como completado"}
       </button>

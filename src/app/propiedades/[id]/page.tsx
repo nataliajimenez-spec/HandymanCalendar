@@ -35,7 +35,7 @@ export default async function PropertyDetailPage({
           active={property.active}
         />
 
-        <div className="bg-white border rounded-lg p-4 space-y-4">
+        <div className="card p-4 space-y-4">
           <h2 className="font-medium">Unidades / departamentos</h2>
           <UnitForm propertyId={property.id} />
 

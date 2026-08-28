@@ -55,29 +55,29 @@ export default async function CalendarioPage({
         <div className="flex items-center gap-2 text-sm">
           <Link
             href={`/calendario?y=${prevMonth.y}&m=${prevMonth.m}`}
-            className="border rounded px-3 py-1 hover:bg-gray-50"
+            className="btn-secondary text-sm px-3 py-1"
           >
             ← Anterior
           </Link>
-          <Link href="/calendario" className="border rounded px-3 py-1 hover:bg-gray-50">
+          <Link href="/calendario" className="btn-secondary text-sm px-3 py-1">
             Hoy
           </Link>
           <Link
             href={`/calendario?y=${nextMonth.y}&m=${nextMonth.m}`}
-            className="border rounded px-3 py-1 hover:bg-gray-50"
+            className="btn-secondary text-sm px-3 py-1"
           >
             Siguiente →
           </Link>
           <Link
             href="/trabajos/nuevo"
-            className="bg-blue-600 text-white rounded px-3 py-1 font-medium"
+            className="btn-primary text-sm px-3 py-1"
           >
             + Nuevo trabajo
           </Link>
         </div>
       </div>
 
-      <div className="bg-white border rounded-lg overflow-hidden">
+      <div className="card overflow-hidden">
         <div className="grid grid-cols-7 border-b bg-gray-50 text-xs font-medium text-gray-500">
           {WEEKDAY_NAMES.map((d) => (
             <div key={d} className="px-2 py-2 text-center">

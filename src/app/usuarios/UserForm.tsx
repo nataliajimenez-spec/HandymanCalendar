@@ -27,17 +27,17 @@ export function UserForm() {
     <form
       ref={formRef}
       action={handleSubmit}
-      className="bg-white border rounded-lg p-4 space-y-3 max-w-md"
+      className="card p-4 space-y-3 max-w-md"
     >
       <h2 className="font-medium">Crear usuario</h2>
 
       {error && (
-        <div className="text-sm text-red-600 bg-red-50 border border-red-200 rounded px-3 py-2">
+        <div className="alert-error">
           {error}
         </div>
       )}
       {success && (
-        <div className="text-sm text-green-700 bg-green-50 border border-green-200 rounded px-3 py-2">
+        <div className="alert-success">
           Usuario creado.
         </div>
       )}
@@ -46,7 +46,7 @@ export function UserForm() {
         <label className="text-sm font-medium" htmlFor="name">
           Nombre
         </label>
-        <input id="name" name="name" required className="w-full border rounded px-3 py-2 text-sm" />
+        <input id="name" name="name" required className="input-field" />
       </div>
 
       <div className="space-y-1">
@@ -58,7 +58,7 @@ export function UserForm() {
           name="email"
           type="email"
           required
-          className="w-full border rounded px-3 py-2 text-sm"
+          className="input-field"
         />
       </div>
 
@@ -73,7 +73,7 @@ export function UserForm() {
           required
           minLength={8}
           placeholder="Mínimo 8 caracteres"
-          className="w-full border rounded px-3 py-2 text-sm"
+          className="input-field"
         />
       </div>
 
@@ -81,7 +81,7 @@ export function UserForm() {
         <label className="text-sm font-medium" htmlFor="role">
           Rol
         </label>
-        <select id="role" name="role" className="w-full border rounded px-3 py-2 text-sm">
+        <select id="role" name="role" className="input-field">
           <option value="HANDYMAN">Handyman</option>
           <option value="OFICINA">Oficina</option>
           <option value="ADMIN">Administrador</option>
@@ -91,7 +91,7 @@ export function UserForm() {
       <button
         type="submit"
         disabled={isPending}
-        className="w-full bg-blue-600 text-white rounded py-2 text-sm font-medium disabled:opacity-50"
+        className="w-full btn-primary"
       >
         {isPending ? "Creando..." : "Crear usuario"}
       </button>

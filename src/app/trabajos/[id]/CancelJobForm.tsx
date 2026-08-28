@@ -14,7 +14,7 @@ export function CancelJobForm({ jobId, status }: { jobId: string; status: string
       <button
         disabled={isPending}
         onClick={() => startTransition(async () => { await reopenJob(jobId); })}
-        className="text-sm border rounded px-3 py-1.5 hover:bg-gray-50 disabled:opacity-50"
+        className="btn-secondary text-sm px-3 py-1.5"
       >
         Reabrir trabajo
       </button>
@@ -27,7 +27,7 @@ export function CancelJobForm({ jobId, status }: { jobId: string; status: string
     return (
       <button
         onClick={() => setConfirming(true)}
-        className="text-sm border border-red-200 text-red-600 rounded px-3 py-1.5 hover:bg-red-50"
+        className="btn-danger-outline"
       >
         Cancelar trabajo
       </button>
@@ -42,7 +42,7 @@ export function CancelJobForm({ jobId, status }: { jobId: string; status: string
         value={reason}
         onChange={(e) => setReason(e.target.value)}
         rows={2}
-        className="w-full border rounded px-2 py-1 text-sm"
+        className="input-field-sm w-full"
       />
       <div className="flex gap-2">
         <button
@@ -53,13 +53,13 @@ export function CancelJobForm({ jobId, status }: { jobId: string; status: string
               if (result?.error) setError(result.error);
             })
           }
-          className="text-sm bg-red-600 text-white rounded px-3 py-1.5 disabled:opacity-50"
+          className="btn-danger"
         >
           {isPending ? "Cancelando..." : "Confirmar cancelación"}
         </button>
         <button
           onClick={() => setConfirming(false)}
-          className="text-sm border rounded px-3 py-1.5"
+          className="btn-secondary text-sm px-3 py-1.5"
         >
           Volver
         </button>

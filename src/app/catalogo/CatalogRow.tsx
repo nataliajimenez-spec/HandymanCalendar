@@ -41,13 +41,13 @@ export function CatalogRow({
             name="name"
             defaultValue={name}
             required
-            className="flex-1 min-w-[140px] border rounded px-2 py-1 text-sm"
+            className="flex-1 min-w-[140px] input-field-sm"
           />
           <input
             name="unitLabel"
             defaultValue={unitLabel}
             required
-            className="w-28 border rounded px-2 py-1 text-sm"
+            className="w-28 input-field-sm"
           />
           <input
             name="unitPrice"
@@ -56,27 +56,27 @@ export function CatalogRow({
             min="0"
             defaultValue={unitPrice}
             required
-            className="w-24 border rounded px-2 py-1 text-sm"
+            className="w-24 input-field-sm"
           />
           <input
             name="sku"
             defaultValue={sku ?? ""}
             placeholder="SKU"
-            className="w-24 border rounded px-2 py-1 text-sm"
+            className="w-24 input-field-sm"
           />
         </div>
         <div className="flex gap-2">
           <button
             type="submit"
             disabled={isPending}
-            className="text-xs bg-blue-600 text-white rounded px-3 py-1 disabled:opacity-50"
+            className="btn-primary text-xs px-3 py-1"
           >
             Guardar
           </button>
           <button
             type="button"
             onClick={() => setEditing(false)}
-            className="text-xs border rounded px-3 py-1"
+            className="btn-secondary text-xs px-3 py-1"
           >
             Cancelar
           </button>
@@ -110,8 +110,8 @@ export function CatalogRow({
           }
           className={`text-xs px-2 py-1 rounded border disabled:opacity-50 ${
             active
-              ? "text-red-600 border-red-200 hover:bg-red-50"
-              : "text-green-700 border-green-200 hover:bg-green-50"
+              ? "badge-toggle-off"
+              : "badge-toggle-on"
           }`}
         >
           {active ? "Desactivar" : "Activar"}

@@ -20,34 +20,39 @@ export function NavBar() {
   if (!session) return null;
 
   return (
-    <header className="border-b bg-white sticky top-0 z-10">
-      <div className="mx-auto max-w-6xl px-4 py-3 flex items-center justify-between gap-4">
+    <header className="sticky top-0 z-10 border-b border-gray-200 bg-white/90 backdrop-blur">
+      <div className="mx-auto flex max-w-6xl items-center justify-between gap-4 px-4 py-3">
         <div className="flex items-center gap-6 overflow-x-auto">
-          <span className="font-semibold whitespace-nowrap">🛠️ Handyman PMI PR</span>
-          <nav className="flex gap-4 text-sm">
-            {LINKS.filter((link) => !link.adminOnly || session.user.role === "ADMIN").map((link) => (
-              <Link
-                key={link.href}
-                href={link.href}
-                className={`whitespace-nowrap ${
-                  pathname?.startsWith(link.href)
-                    ? "font-semibold text-blue-600"
-                    : "text-gray-600 hover:text-gray-900"
-                }`}
-              >
-                {link.label}
-              </Link>
-            ))}
+          <span className="flex items-center gap-1.5 whitespace-nowrap font-semibold text-gray-900">
+            <span className="flex h-7 w-7 items-center justify-center rounded-lg bg-blue-600 text-sm">
+              🛠️
+            </span>
+            Handyman PMI PR
+          </span>
+          <nav className="flex gap-1 text-sm">
+            {LINKS.filter((link) => !link.adminOnly || session.user.role === "ADMIN").map((link) => {
+              const active = pathname?.startsWith(link.href);
+              return (
+                <Link
+                  key={link.href}
+                  href={link.href}
+                  className={`whitespace-nowrap rounded-lg px-3 py-1.5 transition ${
+                    active
+                      ? "bg-blue-50 font-semibold text-blue-700"
+                      : "text-gray-600 hover:bg-gray-100 hover:text-gray-900"
+                  }`}
+                >
+                  {link.label}
+                </Link>
+              );
+            })}
           </nav>
         </div>
-        <div className="flex items-center gap-3 text-sm whitespace-nowrap">
-          <span className="text-gray-500">
+        <div className="flex items-center gap-3 whitespace-nowrap text-sm">
+          <span className="hidden text-gray-500 sm:inline">
             {session.user?.name} · {roleLabel(session.user.role)}
           </span>
-          <button
-            onClick={() => signOut({ callbackUrl: "/login" })}
-            className="text-blue-600 hover:underline"
-          >
+          <button onClick={() => signOut({ callbackUrl: "/login" })} className="btn-secondary px-3 py-1.5 text-sm">
             Salir
           </button>
         </div>

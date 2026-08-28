@@ -45,7 +45,7 @@ export function MediaUploader({ jobId }: { jobId: string }) {
         multiple
         onChange={(e) => handleFiles(e.target.files)}
         disabled={uploading}
-        className="block w-full text-sm border rounded px-2 py-2"
+        className="input-field-sm w-full"
       />
       {progress && <div className="text-xs text-gray-500">{progress}</div>}
       {error && <div className="text-xs text-red-600">{error}</div>}

@@ -15,7 +15,7 @@ export function ToggleActiveButton({ userId, active }: { userId: string; active:
         })
       }
       className={`text-xs px-2 py-1 rounded border disabled:opacity-50 ${
-        active ? "text-red-600 border-red-200 hover:bg-red-50" : "text-green-700 border-green-200 hover:bg-green-50"
+        active ? "badge-toggle-off" : "badge-toggle-on"
       }`}
     >
       {active ? "Desactivar" : "Activar"}

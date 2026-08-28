@@ -24,12 +24,12 @@ export function ItemForm() {
     <form
       ref={formRef}
       action={handleSubmit}
-      className="bg-white border rounded-lg p-4 space-y-3 max-w-md"
+      className="card p-4 space-y-3 max-w-md"
     >
       <h2 className="font-medium">Nuevo item de catálogo</h2>
 
       {error && (
-        <div className="text-sm text-red-600 bg-red-50 border border-red-200 rounded px-3 py-2">
+        <div className="alert-error">
           {error}
         </div>
       )}
@@ -38,7 +38,7 @@ export function ItemForm() {
         <label className="text-sm font-medium" htmlFor="type">
           Tipo
         </label>
-        <select id="type" name="type" className="w-full border rounded px-3 py-2 text-sm">
+        <select id="type" name="type" className="input-field">
           <option value="MATERIAL">Material</option>
           <option value="LABOR">Mano de obra</option>
         </select>
@@ -48,7 +48,7 @@ export function ItemForm() {
         <label className="text-sm font-medium" htmlFor="name">
           Nombre
         </label>
-        <input id="name" name="name" required className="w-full border rounded px-3 py-2 text-sm" />
+        <input id="name" name="name" required className="input-field" />
       </div>
 
       <div className="grid grid-cols-2 gap-2">
@@ -61,7 +61,7 @@ export function ItemForm() {
             name="unitLabel"
             required
             placeholder="hora, galón, unidad..."
-            className="w-full border rounded px-3 py-2 text-sm"
+            className="input-field"
           />
         </div>
         <div className="space-y-1">
@@ -75,7 +75,7 @@ export function ItemForm() {
             step="0.01"
             min="0"
             required
-            className="w-full border rounded px-3 py-2 text-sm"
+            className="input-field"
           />
         </div>
       </div>
@@ -84,13 +84,13 @@ export function ItemForm() {
         <label className="text-sm font-medium" htmlFor="sku">
           SKU / código (opcional)
         </label>
-        <input id="sku" name="sku" className="w-full border rounded px-3 py-2 text-sm" />
+        <input id="sku" name="sku" className="input-field" />
       </div>
 
       <button
         type="submit"
         disabled={isPending}
-        className="w-full bg-blue-600 text-white rounded py-2 text-sm font-medium disabled:opacity-50"
+        className="w-full btn-primary"
       >
         {isPending ? "Agregando..." : "Agregar al catálogo"}
       </button>

@@ -24,7 +24,7 @@ export default async function CatalogoPage() {
         <ItemForm />
 
         <div className="space-y-6">
-          <div className="bg-white border rounded-lg p-4">
+          <div className="card p-4">
             <h2 className="font-medium mb-1">Mano de obra</h2>
             <div className="divide-y">
               {labor.length === 0 && (
@@ -44,7 +44,7 @@ export default async function CatalogoPage() {
             </div>
           </div>
 
-          <div className="bg-white border rounded-lg p-4">
+          <div className="card p-4">
             <h2 className="font-medium mb-1">Materiales</h2>
             <div className="divide-y">
               {materials.length === 0 && (

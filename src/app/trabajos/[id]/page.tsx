@@ -67,7 +67,7 @@ export default async function JobDetailPage({
         {job.status === "SCHEDULED" && (
           <Link
             href={`/trabajos/${job.id}/completar`}
-            className="text-sm bg-green-600 text-white rounded px-3 py-1.5 font-medium"
+            className="btn-success text-sm px-3 py-1.5"
           >
             Completar trabajo
           </Link>
@@ -75,7 +75,7 @@ export default async function JobDetailPage({
         {job.status === "COMPLETED" && (
           <Link
             href={`/trabajos/${job.id}/completar`}
-            className="text-sm border rounded px-3 py-1.5 hover:bg-gray-50"
+            className="btn-secondary text-sm px-3 py-1.5"
           >
             Ver detalles de finalización
           </Link>

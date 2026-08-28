@@ -26,7 +26,7 @@ export default async function UsuariosPage() {
       <div className="grid gap-6 md:grid-cols-2">
         <UserForm />
 
-        <div className="bg-white border rounded-lg divide-y">
+        <div className="card divide-y">
           {users.map((u) => (
             <div key={u.id} className="flex items-center justify-between px-4 py-3">
               <div>

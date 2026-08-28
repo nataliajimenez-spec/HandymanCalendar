@@ -17,7 +17,7 @@ export default async function PropiedadesPage() {
       <div className="grid gap-6 md:grid-cols-2">
         <PropertyForm />
 
-        <div className="bg-white border rounded-lg divide-y">
+        <div className="card divide-y">
           {properties.length === 0 && (
             <div className="px-4 py-6 text-sm text-gray-500">
               No hay propiedades todavía. Crea la primera con el formulario.

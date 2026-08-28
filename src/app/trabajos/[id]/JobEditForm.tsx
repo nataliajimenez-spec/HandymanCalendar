@@ -42,11 +42,11 @@ export function JobEditForm({
   }
 
   return (
-    <form action={handleSubmit} className="bg-white border rounded-lg p-4 space-y-3">
+    <form action={handleSubmit} className="card p-4 space-y-3">
       <h2 className="font-medium">Editar trabajo</h2>
 
       {error && (
-        <div className="text-sm text-red-600 bg-red-50 border border-red-200 rounded px-3 py-2">
+        <div className="alert-error">
           {error}
         </div>
       )}
@@ -67,7 +67,7 @@ export function JobEditForm({
           name="title"
           required
           defaultValue={title}
-          className="w-full border rounded px-3 py-2 text-sm"
+          className="input-field"
         />
       </div>
 
@@ -80,7 +80,7 @@ export function JobEditForm({
           name="description"
           rows={3}
           defaultValue={description ?? ""}
-          className="w-full border rounded px-3 py-2 text-sm"
+          className="input-field"
         />
       </div>
 
@@ -94,14 +94,14 @@ export function JobEditForm({
           type="datetime-local"
           required
           defaultValue={scheduledAtLocal}
-          className="w-full border rounded px-3 py-2 text-sm"
+          className="input-field"
         />
       </div>
 
       <button
         type="submit"
         disabled={isPending}
-        className="bg-blue-600 text-white rounded px-4 py-2 text-sm font-medium disabled:opacity-50"
+        className="btn-primary"
       >
         {isPending ? "Guardando..." : "Guardar cambios"}
       </button>

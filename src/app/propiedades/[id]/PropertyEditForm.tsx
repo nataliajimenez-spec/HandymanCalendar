@@ -31,7 +31,7 @@ export function PropertyEditForm({
   }
 
   return (
-    <form action={handleSubmit} className="bg-white border rounded-lg p-4 space-y-3 max-w-md">
+    <form action={handleSubmit} className="card p-4 space-y-3 max-w-md">
       <div className="flex items-center justify-between">
         <h2 className="font-medium">Datos de la propiedad</h2>
         <button
@@ -43,7 +43,7 @@ export function PropertyEditForm({
             })
           }
           className={`text-xs px-2 py-1 rounded border disabled:opacity-50 ${
-            active ? "text-red-600 border-red-200 hover:bg-red-50" : "text-green-700 border-green-200 hover:bg-green-50"
+            active ? "badge-toggle-off" : "badge-toggle-on"
           }`}
         >
           {active ? "Desactivar" : "Activar"}
@@ -51,7 +51,7 @@ export function PropertyEditForm({
       </div>
 
       {error && (
-        <div className="text-sm text-red-600 bg-red-50 border border-red-200 rounded px-3 py-2">
+        <div className="alert-error">
           {error}
         </div>
       )}
@@ -66,7 +66,7 @@ export function PropertyEditForm({
           name="name"
           required
           defaultValue={name}
-          className="w-full border rounded px-3 py-2 text-sm"
+          className="input-field"
         />
       </div>
 
@@ -78,7 +78,7 @@ export function PropertyEditForm({
           id="address"
           name="address"
           defaultValue={address ?? ""}
-          className="w-full border rounded px-3 py-2 text-sm"
+          className="input-field"
         />
       </div>
 
@@ -91,14 +91,14 @@ export function PropertyEditForm({
           name="notes"
           rows={2}
           defaultValue={notes ?? ""}
-          className="w-full border rounded px-3 py-2 text-sm"
+          className="input-field"
         />
       </div>
 
       <button
         type="submit"
         disabled={isPending}
-        className="bg-blue-600 text-white rounded px-4 py-2 text-sm font-medium disabled:opacity-50"
+        className="btn-primary"
       >
         {isPending ? "Guardando..." : "Guardar cambios"}
       </button>

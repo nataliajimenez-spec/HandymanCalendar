@@ -92,7 +92,7 @@ export function LineItemForm({
       <select
         value={catalogItemId}
         onChange={(e) => handleCatalogChange(e.target.value)}
-        className="w-full border rounded px-2 py-1.5 text-sm"
+        className="input-field-sm w-full"
       >
         <option value="">— Personalizado / no está en el catálogo —</option>
         {filtered.map((c) => (
@@ -109,7 +109,7 @@ export function LineItemForm({
         placeholder={type === "LABOR" ? "Ej. Mano de obra - regular" : "Ej. Bombilla LED"}
         value={description}
         onChange={(e) => setDescription(e.target.value)}
-        className="w-full border rounded px-2 py-1.5 text-sm"
+        className="input-field-sm w-full"
       />
 
       <div className="grid grid-cols-2 gap-2">
@@ -123,7 +123,7 @@ export function LineItemForm({
             step="0.01"
             min="0.01"
             required
-            className="w-full border rounded px-2 py-1.5 text-sm"
+            className="input-field-sm w-full"
           />
         </div>
         <div>
@@ -138,7 +138,7 @@ export function LineItemForm({
             required
             value={unitPrice}
             onChange={(e) => setUnitPrice(e.target.value)}
-            className="w-full border rounded px-2 py-1.5 text-sm"
+            className="input-field-sm w-full"
           />
         </div>
       </div>
@@ -146,13 +146,13 @@ export function LineItemForm({
       <input
         name="note"
         placeholder="Nota (opcional)"
-        className="w-full border rounded px-2 py-1.5 text-sm"
+        className="input-field-sm w-full"
       />
 
       <button
         type="submit"
         disabled={isPending}
-        className="w-full bg-blue-600 text-white rounded py-1.5 text-sm font-medium disabled:opacity-50"
+        className="w-full btn-primary py-1.5"
       >
         {isPending ? "Agregando..." : "Agregar"}
       </button>
