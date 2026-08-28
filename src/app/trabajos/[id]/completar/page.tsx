@@ -39,7 +39,7 @@ export default async function CompletarTrabajoPage({
   return (
     <div className="space-y-6 max-w-2xl">
       <div>
-        <Link href={`/trabajos/${job.id}`} className="text-sm text-blue-600 hover:underline">
+        <Link href={`/trabajos/${job.id}`} className="text-sm text-orange-600 hover:underline">
           ← Volver al trabajo
         </Link>
         <div className="flex items-center justify-between gap-2 mt-1">

@@ -3,6 +3,7 @@
 import { useState, useTransition } from "react";
 import { updateJob } from "../actions";
 import { PropertyUnitSelect } from "@/components/PropertyUnitSelect";
+import { DurationSelect } from "@/components/DurationSelect";
 
 type PropertyOption = {
   id: string;
@@ -18,6 +19,7 @@ export function JobEditForm({
   scheduledAtLocal,
   propertyId,
   unitId,
+  durationMinutes,
 }: {
   jobId: string;
   properties: PropertyOption[];
@@ -26,6 +28,7 @@ export function JobEditForm({
   scheduledAtLocal: string;
   propertyId: string;
   unitId: string | null;
+  durationMinutes: number;
 }) {
   const [error, setError] = useState<string | null>(null);
   const [saved, setSaved] = useState(false);
@@ -97,6 +100,8 @@ export function JobEditForm({
           className="input-field"
         />
       </div>
+
+      <DurationSelect defaultValue={durationMinutes} />
 
       <button
         type="submit"

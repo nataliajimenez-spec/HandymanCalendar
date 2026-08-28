@@ -57,11 +57,11 @@ function LoginForm() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 via-white to-gray-100 px-4 py-10">
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-100 via-white to-orange-50 px-4 py-10">
       <div className="w-full max-w-sm space-y-4">
         <form onSubmit={handleSubmit} className="card p-6 sm:p-7 space-y-4">
           <div className="text-center space-y-1.5">
-            <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-2xl bg-blue-600 text-2xl shadow-sm">
+            <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-2xl bg-gray-900 text-2xl shadow-sm">
               🛠️
             </div>
             <h1 className="text-lg font-semibold text-gray-900">Handyman PMI PR</h1>

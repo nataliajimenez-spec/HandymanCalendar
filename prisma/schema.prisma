@@ -119,6 +119,7 @@ model Job {
   title           String
   description     String?
   scheduledAt     DateTime
+  durationMinutes Int       @default(60)
   status          JobStatus @default(SCHEDULED)
   completionNotes String?
   completedAt     DateTime?

@@ -4,6 +4,7 @@ import { useState, useTransition } from "react";
 import Link from "next/link";
 import { createJob } from "../actions";
 import { PropertyUnitSelect } from "@/components/PropertyUnitSelect";
+import { DurationSelect } from "@/components/DurationSelect";
 
 type PropertyOption = {
   id: string;
@@ -35,7 +36,7 @@ export function JobForm({
     return (
       <div className="text-sm text-gray-600">
         Primero crea una propiedad en{" "}
-        <Link href="/propiedades" className="text-blue-600 underline">
+        <Link href="/propiedades" className="text-orange-600 underline">
           Propiedades
         </Link>
         .
@@ -91,6 +92,8 @@ export function JobForm({
           className="input-field"
         />
       </div>
+
+      <DurationSelect />
 
       <button
         type="submit"

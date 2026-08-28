@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { prisma } from "@/lib/prisma";
 import { buildMonthGrid, dateKey } from "@/lib/calendar";
+import { CalendarGrid } from "./CalendarGrid";
 
 export const dynamic = "force-dynamic";
 
@@ -8,7 +9,6 @@ const MONTH_NAMES = [
   "Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio",
   "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre",
 ];
-const WEEKDAY_NAMES = ["Dom", "Lun", "Mar", "Mié", "Jue", "Vie", "Sáb"];
 
 export default async function CalendarioPage({
   searchParams,
@@ -24,23 +24,46 @@ export default async function CalendarioPage({
   const gridStart = weeks[0][0];
   const gridEnd = weeks[weeks.length - 1][6];
 
-  const jobs = await prisma.job.findMany({
-    where: {
-      scheduledAt: {
-        gte: gridStart,
-        lt: new Date(gridEnd.getFullYear(), gridEnd.getMonth(), gridEnd.getDate() + 1),
+  const [jobs, properties] = await Promise.all([
+    prisma.job.findMany({
+      where: {
+        scheduledAt: {
+          gte: gridStart,
+          lt: new Date(gridEnd.getFullYear(), gridEnd.getMonth(), gridEnd.getDate() + 1),
+        },
       },
-    },
-    include: { property: true, unit: true, createdBy: true },
-    orderBy: { scheduledAt: "asc" },
-  });
+      include: { property: true, unit: true },
+      orderBy: { scheduledAt: "asc" },
+    }),
+    prisma.property.findMany({
+      where: { active: true },
+      orderBy: { name: "asc" },
+      include: { units: { where: { active: true }, orderBy: { label: "asc" } } },
+    }),
+  ]);
 
-  const jobsByDay = new Map<string, typeof jobs>();
+  const jobsByDay: Record<string, ReturnType<typeof serializeJob>[]> = {};
+  function serializeJob(job: (typeof jobs)[number]) {
+    return {
+      id: job.id,
+      title: job.title,
+      status: job.status,
+      time: job.scheduledAt.toTimeString().slice(0, 5),
+      propertyName: job.property.name,
+      unitLabel: job.unit?.label ?? null,
+    };
+  }
   for (const job of jobs) {
     const key = dateKey(job.scheduledAt);
-    if (!jobsByDay.has(key)) jobsByDay.set(key, []);
-    jobsByDay.get(key)!.push(job);
+    if (!jobsByDay[key]) jobsByDay[key] = [];
+    jobsByDay[key].push(serializeJob(job));
   }
+
+  const days = weeks.flat().map((d) => ({
+    key: dateKey(d),
+    day: d.getDate(),
+    inCurrentMonth: d.getMonth() === month,
+  }));
 
   const prevMonth = month === 0 ? { y: year - 1, m: 12 } : { y: year, m: month };
   const nextMonth = month === 11 ? { y: year + 1, m: 1 } : { y: year, m: month + 2 };
@@ -68,83 +91,14 @@ export default async function CalendarioPage({
           >
             Siguiente →
           </Link>
-          <Link
-            href="/trabajos/nuevo"
-            className="btn-primary text-sm px-3 py-1"
-          >
-            + Nuevo trabajo
-          </Link>
         </div>
       </div>
 
-      <div className="card overflow-hidden">
-        <div className="grid grid-cols-7 border-b bg-gray-50 text-xs font-medium text-gray-500">
-          {WEEKDAY_NAMES.map((d) => (
-            <div key={d} className="px-2 py-2 text-center">
-              {d}
-            </div>
-          ))}
-        </div>
-
-        <div className="grid grid-cols-7">
-          {weeks.flat().map((day) => {
-            const key = dateKey(day);
-            const isCurrentMonth = day.getMonth() === month;
-            const dayJobs = jobsByDay.get(key) ?? [];
-            return (
-              <div
-                key={key}
-                className={`min-h-[110px] border-b border-r p-1.5 align-top ${
-                  isCurrentMonth ? "bg-white" : "bg-gray-50"
-                }`}
-              >
-                <div className="flex items-center justify-between">
-                  <span
-                    className={`text-xs ${
-                      key === todayKey
-                        ? "bg-blue-600 text-white rounded-full w-5 h-5 flex items-center justify-center"
-                        : isCurrentMonth
-                        ? "text-gray-700"
-                        : "text-gray-400"
-                    }`}
-                  >
-                    {day.getDate()}
-                  </span>
-                  <Link
-                    href={`/trabajos/nuevo?date=${key}`}
-                    className="text-xs text-blue-600 hover:underline"
-                    title="Agendar trabajo este día"
-                  >
-                    +
-                  </Link>
-                </div>
-                <div className="mt-1 space-y-1">
-                  {dayJobs.map((job) => (
-                    <Link
-                      key={job.id}
-                      href={`/trabajos/${job.id}`}
-                      className={`block text-[11px] leading-tight rounded px-1 py-0.5 truncate ${
-                        job.status === "CANCELLED"
-                          ? "bg-gray-100 text-gray-400 line-through"
-                          : job.status === "COMPLETED"
-                          ? "bg-green-50 text-green-800"
-                          : "bg-blue-50 text-blue-800"
-                      }`}
-                      title={`${job.title} — ${job.property.name}${job.unit ? " / " + job.unit.label : ""}`}
-                    >
-                      {job.scheduledAt.toTimeString().slice(0, 5)} {job.title}
-                    </Link>
-                  ))}
-                </div>
-              </div>
-            );
-          })}
-        </div>
-      </div>
+      <CalendarGrid days={days} todayKey={todayKey} jobsByDay={jobsByDay} properties={properties} />
 
       <div className="flex gap-4 text-xs text-gray-500">
         <span className="flex items-center gap-1">
-          <span className="w-2.5 h-2.5 rounded-full bg-blue-500 inline-block" /> Agendado
+          <span className="w-2.5 h-2.5 rounded-full bg-orange-500 inline-block" /> Agendado
         </span>
         <span className="flex items-center gap-1">
           <span className="w-2.5 h-2.5 rounded-full bg-green-500 inline-block" /> Completado

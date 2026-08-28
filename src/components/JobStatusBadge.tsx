@@ -1,5 +1,5 @@
 const STYLES: Record<string, string> = {
-  SCHEDULED: "bg-blue-100 text-blue-700",
+  SCHEDULED: "bg-orange-100 text-orange-700",
   COMPLETED: "bg-green-100 text-green-700",
   CANCELLED: "bg-gray-200 text-gray-500 line-through",
 };

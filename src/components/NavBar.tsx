@@ -24,7 +24,7 @@ export function NavBar() {
       <div className="mx-auto flex max-w-6xl items-center justify-between gap-4 px-4 py-3">
         <div className="flex items-center gap-6 overflow-x-auto">
           <span className="flex items-center gap-1.5 whitespace-nowrap font-semibold text-gray-900">
-            <span className="flex h-7 w-7 items-center justify-center rounded-lg bg-blue-600 text-sm">
+            <span className="flex h-7 w-7 items-center justify-center rounded-lg bg-gray-900 text-sm">
               🛠️
             </span>
             Handyman PMI PR
@@ -38,7 +38,7 @@ export function NavBar() {
                   href={link.href}
                   className={`whitespace-nowrap rounded-lg px-3 py-1.5 transition ${
                     active
-                      ? "bg-blue-50 font-semibold text-blue-700"
+                      ? "bg-orange-50 font-semibold text-orange-700"
                       : "text-gray-600 hover:bg-gray-100 hover:text-gray-900"
                   }`}
                 >

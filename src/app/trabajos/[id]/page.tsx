@@ -1,6 +1,8 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { format } from "date-fns";
+import { format, addMinutes } from "date-fns";
+import { es } from "date-fns/locale";
+import { formatDuration } from "@/lib/duration";
 import { prisma } from "@/lib/prisma";
 import { JobStatusBadge } from "@/components/JobStatusBadge";
 import { JobEditForm } from "./JobEditForm";
@@ -41,7 +43,9 @@ export default async function JobDetailPage({
           <p className="text-sm text-gray-500">
             {job.property.name}
             {job.unit && ` / ${job.unit.label}`} ·{" "}
-            {format(job.scheduledAt, "d 'de' MMMM yyyy, h:mm a")}
+            {format(job.scheduledAt, "d 'de' MMMM yyyy, h:mm a", { locale: es })} –{" "}
+            {format(addMinutes(job.scheduledAt, job.durationMinutes), "h:mm a")} (
+            {formatDuration(job.durationMinutes)})
           </p>
         </div>
         <JobStatusBadge status={job.status} />
@@ -92,6 +96,7 @@ export default async function JobDetailPage({
           scheduledAtLocal={format(job.scheduledAt, "yyyy-MM-dd'T'HH:mm")}
           propertyId={job.propertyId}
           unitId={job.unitId}
+          durationMinutes={job.durationMinutes}
         />
       )}
     </div>

@@ -12,6 +12,7 @@ const jobSchema = z.object({
   title: z.string().min(1, "Título requerido"),
   description: z.string().optional(),
   scheduledAt: z.coerce.date({ message: "Fecha y hora inválidas" }),
+  durationMinutes: z.coerce.number().int().positive().default(60),
 });
 
 export async function createJob(formData: FormData) {
@@ -25,6 +26,7 @@ export async function createJob(formData: FormData) {
     title: formData.get("title"),
     description: formData.get("description") || undefined,
     scheduledAt: formData.get("scheduledAt"),
+    durationMinutes: formData.get("durationMinutes") || undefined,
   });
   if (!parsed.success) {
     return { error: parsed.error.issues[0]?.message ?? "Datos inválidos" };
@@ -55,6 +57,7 @@ export async function updateJob(jobId: string, formData: FormData) {
     title: formData.get("title"),
     description: formData.get("description") || undefined,
     scheduledAt: formData.get("scheduledAt"),
+    durationMinutes: formData.get("durationMinutes") || undefined,
   });
   if (!parsed.success) {
     return { error: parsed.error.issues[0]?.message ?? "Datos inválidos" };
