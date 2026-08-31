@@ -8,8 +8,8 @@ import { roleLabel } from "@/lib/roles";
 const LINKS = [
   { href: "/calendario", label: "Calendario" },
   { href: "/propiedades", label: "Propiedades" },
-  { href: "/catalogo", label: "Catálogo de precios" },
-  { href: "/reportes", label: "Reportes" },
+  { href: "/catalogo", label: "Catálogo", officeOnly: true },
+  { href: "/reportes", label: "Reportes", officeOnly: true },
   { href: "/usuarios", label: "Usuarios", adminOnly: true },
 ];
 
@@ -27,10 +27,15 @@ export function NavBar() {
             <span className="flex h-7 w-7 items-center justify-center rounded-lg bg-gray-900 text-sm">
               🛠️
             </span>
-            Handyman PMI PR
+            <span className="hidden sm:inline">Vendor Management</span>
+            <span className="sm:hidden">VM PMI PR</span>
           </span>
           <nav className="flex gap-1 text-sm">
-            {LINKS.filter((link) => !link.adminOnly || session.user.role === "ADMIN").map((link) => {
+            {LINKS.filter((link) => {
+              if (link.adminOnly && session.user.role !== "ADMIN") return false;
+              if (link.officeOnly && session.user.role === "HANDYMAN") return false;
+              return true;
+            }).map((link) => {
               const active = pathname?.startsWith(link.href);
               return (
                 <Link

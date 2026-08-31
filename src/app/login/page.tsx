@@ -64,7 +64,7 @@ function LoginForm() {
             <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-2xl bg-gray-900 text-2xl shadow-sm">
               🛠️
             </div>
-            <h1 className="text-lg font-semibold text-gray-900">Handyman PMI PR</h1>
+            <h1 className="text-lg font-semibold text-gray-900">Vendor Management at PMI Puerto Rico</h1>
             <p className="text-sm text-gray-500">Inicia sesión para continuar</p>
           </div>
 

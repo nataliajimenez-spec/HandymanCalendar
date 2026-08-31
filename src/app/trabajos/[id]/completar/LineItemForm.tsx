@@ -8,15 +8,17 @@ type CatalogItem = {
   type: "MATERIAL" | "LABOR";
   name: string;
   unitLabel: string;
-  unitPrice: number;
+  unitPrice: number | null;
 };
 
 export function LineItemForm({
   jobId,
   catalogItems,
+  pricesVisible,
 }: {
   jobId: string;
   catalogItems: CatalogItem[];
+  pricesVisible: boolean;
 }) {
   const formRef = useRef<HTMLFormElement>(null);
   const [type, setType] = useState<"MATERIAL" | "LABOR">("LABOR");
@@ -33,7 +35,7 @@ export function LineItemForm({
     const item = catalogItems.find((c) => c.id === id);
     if (item) {
       setDescription(item.name);
-      setUnitPrice(String(item.unitPrice));
+      setUnitPrice(item.unitPrice !== null ? String(item.unitPrice) : "0");
     }
   }
 
@@ -92,12 +94,16 @@ export function LineItemForm({
       <select
         value={catalogItemId}
         onChange={(e) => handleCatalogChange(e.target.value)}
+        required={!pricesVisible}
         className="input-field-sm w-full"
       >
-        <option value="">— Personalizado / no está en el catálogo —</option>
+        <option value="">
+          {pricesVisible ? "— Personalizado / no está en el catálogo —" : "— Selecciona —"}
+        </option>
         {filtered.map((c) => (
           <option key={c.id} value={c.id}>
-            {c.name} ({c.unitLabel} — ${c.unitPrice.toFixed(2)})
+            {c.name}
+            {pricesVisible && c.unitPrice !== null ? ` (${c.unitLabel} — $${c.unitPrice.toFixed(2)})` : ` (${c.unitLabel})`}
           </option>
         ))}
       </select>
@@ -109,10 +115,11 @@ export function LineItemForm({
         placeholder={type === "LABOR" ? "Ej. Mano de obra - regular" : "Ej. Bombilla LED"}
         value={description}
         onChange={(e) => setDescription(e.target.value)}
+        readOnly={!pricesVisible}
         className="input-field-sm w-full"
       />
 
-      <div className="grid grid-cols-2 gap-2">
+      <div className={pricesVisible ? "grid grid-cols-2 gap-2" : ""}>
         <div>
           <label className="text-xs text-gray-500">
             {type === "LABOR" ? "Horas" : "Cantidad"}
@@ -126,22 +133,23 @@ export function LineItemForm({
             className="input-field-sm w-full"
           />
         </div>
-        <div>
-          <label className="text-xs text-gray-500">
-            Precio unitario ($){" "}
-          </label>
-          <input
-            name="unitPrice"
-            type="number"
-            step="0.01"
-            min="0"
-            required
-            value={unitPrice}
-            onChange={(e) => setUnitPrice(e.target.value)}
-            className="input-field-sm w-full"
-          />
-        </div>
+        {pricesVisible && (
+          <div>
+            <label className="text-xs text-gray-500">Precio unitario ($)</label>
+            <input
+              name="unitPrice"
+              type="number"
+              step="0.01"
+              min="0"
+              required
+              value={unitPrice}
+              onChange={(e) => setUnitPrice(e.target.value)}
+              className="input-field-sm w-full"
+            />
+          </div>
+        )}
       </div>
+      {!pricesVisible && <input type="hidden" name="unitPrice" value="0" />}
 
       <input
         name="note"

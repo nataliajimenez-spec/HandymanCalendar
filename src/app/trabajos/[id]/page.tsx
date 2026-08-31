@@ -29,11 +29,14 @@ export default async function JobDetailPage({
 
   if (!job) notFound();
 
-  const properties = await prisma.property.findMany({
-    where: { active: true },
-    orderBy: { name: "asc" },
-    include: { units: { where: { active: true }, orderBy: { label: "asc" } } },
-  });
+  const [properties, jobTypes] = await Promise.all([
+    prisma.property.findMany({
+      where: { active: true },
+      orderBy: { name: "asc" },
+      include: { units: { where: { active: true }, orderBy: { label: "asc" } } },
+    }),
+    prisma.jobType.findMany({ where: { active: true }, orderBy: { name: "asc" } }),
+  ]);
 
   return (
     <div className="space-y-4 max-w-2xl">
@@ -91,7 +94,9 @@ export default async function JobDetailPage({
         <JobEditForm
           jobId={job.id}
           properties={properties}
+          jobTypes={jobTypes}
           title={job.title}
+          jobTypeId={job.jobTypeId}
           description={job.description}
           scheduledAtLocal={format(job.scheduledAt, "yyyy-MM-dd'T'HH:mm")}
           propertyId={job.propertyId}

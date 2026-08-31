@@ -3,6 +3,7 @@ import { prisma } from "@/lib/prisma";
 import { PropertyEditForm } from "./PropertyEditForm";
 import { UnitForm } from "./UnitForm";
 import { UnitToggle } from "./UnitToggle";
+import { UnitManagementToggle } from "./UnitManagementToggle";
 
 export const dynamic = "force-dynamic";
 
@@ -47,15 +48,22 @@ export default async function PropertyDetailPage({
               </div>
             )}
             {property.units.map((u) => (
-              <div key={u.id} className="flex items-center justify-between py-2">
-                <div>
+              <div key={u.id} className="flex items-center justify-between py-2 gap-2">
+                <div className="min-w-0">
                   <div className="text-sm font-medium">
                     {u.label}
                     {!u.active && <span className="text-gray-400 font-normal"> (inactiva)</span>}
                   </div>
                   {u.notes && <div className="text-xs text-gray-500">{u.notes}</div>}
                 </div>
-                <UnitToggle propertyId={property.id} unitId={u.id} active={u.active} />
+                <div className="flex items-center gap-2 shrink-0">
+                  <UnitManagementToggle
+                    propertyId={property.id}
+                    unitId={u.id}
+                    managementType={u.managementType}
+                  />
+                  <UnitToggle propertyId={property.id} unitId={u.id} active={u.active} />
+                </div>
               </div>
             ))}
           </div>

@@ -4,7 +4,7 @@ import { revalidatePath } from "next/cache";
 import { del } from "@vercel/blob";
 import { z } from "zod";
 import { prisma } from "@/lib/prisma";
-import { getCurrentUser } from "@/lib/session";
+import { getCurrentUser, canSeePricing } from "@/lib/session";
 
 const lineItemSchema = z.object({
   type: z.enum(["MATERIAL", "LABOR"]),
@@ -33,6 +33,22 @@ export async function addLineItem(jobId: string, formData: FormData) {
   }
 
   const { catalogItemId, ...rest } = parsed.data;
+
+  // El handyman no ve ni controla los precios que se cobran a los dueños:
+  // solo puede registrar cantidades sobre un ítem real del catálogo, y el
+  // precio se toma del catálogo en el servidor, nunca de lo que envíe el navegador.
+  if (!canSeePricing(user.role)) {
+    if (!catalogItemId) {
+      return { error: "Selecciona un ítem del catálogo." };
+    }
+    const catalogItem = await prisma.priceCatalogItem.findUnique({ where: { id: catalogItemId } });
+    if (!catalogItem) {
+      return { error: "Ese ítem del catálogo ya no existe." };
+    }
+    rest.type = catalogItem.type;
+    rest.description = catalogItem.name;
+    rest.unitPrice = Number(catalogItem.unitPrice);
+  }
 
   await prisma.jobLineItem.create({
     data: {

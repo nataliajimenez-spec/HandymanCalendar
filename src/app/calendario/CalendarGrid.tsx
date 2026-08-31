@@ -19,6 +19,8 @@ type PropertyOption = {
   units: { id: string; label: string }[];
 };
 
+type JobType = { id: string; name: string };
+
 const WEEKDAY_NAMES = ["Dom", "Lun", "Mar", "Mié", "Jue", "Vie", "Sáb"];
 
 export function CalendarGrid({
@@ -26,11 +28,13 @@ export function CalendarGrid({
   todayKey,
   jobsByDay,
   properties,
+  jobTypes,
 }: {
   days: { key: string; day: number; inCurrentMonth: boolean }[];
   todayKey: string;
   jobsByDay: Record<string, CalendarJob[]>;
   properties: PropertyOption[];
+  jobTypes: JobType[];
 }) {
   const [modalDate, setModalDate] = useState<string | null>(null);
 
@@ -108,7 +112,12 @@ export function CalendarGrid({
         </div>
       </div>
 
-      <NewJobModal date={modalDate} properties={properties} onClose={() => setModalDate(null)} />
+      <NewJobModal
+        date={modalDate}
+        properties={properties}
+        jobTypes={jobTypes}
+        onClose={() => setModalDate(null)}
+      />
     </>
   );
 }

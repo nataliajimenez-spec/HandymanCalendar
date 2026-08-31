@@ -61,14 +61,20 @@ model Property {
   @@map("properties")
 }
 
+enum ManagementType {
+  LONG_TERM
+  SHORT_TERM
+}
+
 model Unit {
-  id         String   @id @default(cuid())
-  propertyId String
-  label      String // e.g. "Apto 3B", "Oficina 2"
-  notes      String?
-  active     Boolean  @default(true)
-  createdAt  DateTime @default(now())
-  updatedAt  DateTime @updatedAt
+  id             String         @id @default(cuid())
+  propertyId     String
+  label          String // e.g. "Apto 3B", "Oficina 2"
+  notes          String?
+  managementType ManagementType @default(LONG_TERM)
+  active         Boolean        @default(true)
+  createdAt      DateTime       @default(now())
+  updatedAt      DateTime       @updatedAt
 
   property Property @relation(fields: [propertyId], references: [id], onDelete: Cascade)
   jobs     Job[]
@@ -103,6 +109,22 @@ model PriceCatalogItem {
 }
 
 // ---------------------------------------------------------------------------
+// Job types (what kind of work it is — no pricing here)
+// ---------------------------------------------------------------------------
+
+model JobType {
+  id        String   @id @default(cuid())
+  name      String   @unique
+  active    Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  jobs Job[]
+
+  @@map("job_types")
+}
+
+// ---------------------------------------------------------------------------
 // Jobs
 // ---------------------------------------------------------------------------
 
@@ -116,6 +138,7 @@ model Job {
   id              String    @id @default(cuid())
   propertyId      String
   unitId          String?
+  jobTypeId       String?
   title           String
   description     String?
   scheduledAt     DateTime
@@ -134,6 +157,7 @@ model Job {
 
   property    Property @relation(fields: [propertyId], references: [id], onDelete: Restrict)
   unit        Unit?    @relation(fields: [unitId], references: [id], onDelete: SetNull)
+  jobType     JobType? @relation(fields: [jobTypeId], references: [id], onDelete: SetNull)
   createdBy   User     @relation("JobCreatedBy", fields: [createdById], references: [id], onDelete: Restrict)
   cancelledBy User?    @relation("JobCancelledBy", fields: [cancelledById], references: [id], onDelete: SetNull)
 

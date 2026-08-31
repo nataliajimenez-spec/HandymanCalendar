@@ -4,6 +4,7 @@ import { useEffect, useState, useTransition } from "react";
 import { createJob } from "../trabajos/actions";
 import { PropertyUnitSelect } from "@/components/PropertyUnitSelect";
 import { DurationSelect } from "@/components/DurationSelect";
+import { JobTypeSelect } from "@/components/JobTypeSelect";
 
 type PropertyOption = {
   id: string;
@@ -11,13 +12,17 @@ type PropertyOption = {
   units: { id: string; label: string }[];
 };
 
+type JobType = { id: string; name: string };
+
 export function NewJobModal({
   date,
   properties,
+  jobTypes,
   onClose,
 }: {
   date: string | null;
   properties: PropertyOption[];
+  jobTypes: JobType[];
   onClose: () => void;
 }) {
   const [error, setError] = useState<string | null>(null);
@@ -81,18 +86,7 @@ export function NewJobModal({
 
             <PropertyUnitSelect properties={properties} />
 
-            <div className="space-y-1">
-              <label className="field-label" htmlFor="modal-title">
-                Título del trabajo
-              </label>
-              <input
-                id="modal-title"
-                name="title"
-                required
-                placeholder="Ej. Reparar fuga en baño"
-                className="input-field"
-              />
-            </div>
+            <JobTypeSelect jobTypes={jobTypes} idPrefix="modal-" />
 
             <div className="space-y-1">
               <label className="field-label" htmlFor="modal-description">

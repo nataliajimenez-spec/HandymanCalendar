@@ -15,8 +15,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Handyman Calendar — PMI Puerto Rico",
-  description: "Agenda y seguimiento de trabajos del handyman de PMI Puerto Rico",
+  title: "Vendor Management at PMI Puerto Rico",
+  description: "Agenda y seguimiento de trabajos de vendors/handyman de PMI Puerto Rico",
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {

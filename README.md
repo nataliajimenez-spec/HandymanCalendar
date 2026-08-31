@@ -1,4 +1,4 @@
-# Handyman Calendar — PMI Puerto Rico
+# Vendor Management at PMI Puerto Rico
 
 App web para agendar y dar seguimiento a los trabajos del handyman de PMI
 Puerto Rico. Next.js (App Router) + TypeScript + Prisma + Postgres,

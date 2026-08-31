@@ -61,6 +61,7 @@ export async function setPropertyActive(propertyId: string, active: boolean) {
 const unitSchema = z.object({
   label: z.string().min(1, "Nombre/número de unidad requerido"),
   notes: z.string().optional(),
+  managementType: z.enum(["LONG_TERM", "SHORT_TERM"]).default("LONG_TERM"),
 });
 
 export async function createUnit(propertyId: string, formData: FormData) {
@@ -70,6 +71,7 @@ export async function createUnit(propertyId: string, formData: FormData) {
   const parsed = unitSchema.safeParse({
     label: formData.get("label"),
     notes: formData.get("notes") || undefined,
+    managementType: formData.get("managementType") || undefined,
   });
   if (!parsed.success) {
     return { error: parsed.error.issues[0]?.message ?? "Datos inválidos" };
@@ -92,6 +94,19 @@ export async function setUnitActive(propertyId: string, unitId: string, active: 
   if (!user) return { error: "No autorizado." };
 
   await prisma.unit.update({ where: { id: unitId }, data: { active } });
+  revalidatePath(`/propiedades/${propertyId}`);
+  return { success: true };
+}
+
+export async function setUnitManagementType(
+  propertyId: string,
+  unitId: string,
+  managementType: "LONG_TERM" | "SHORT_TERM"
+) {
+  const user = await getCurrentUser();
+  if (!user) return { error: "No autorizado." };
+
+  await prisma.unit.update({ where: { id: unitId }, data: { managementType } });
   revalidatePath(`/propiedades/${propertyId}`);
   return { success: true };
 }

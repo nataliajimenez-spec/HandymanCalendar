@@ -24,7 +24,7 @@ export default async function CalendarioPage({
   const gridStart = weeks[0][0];
   const gridEnd = weeks[weeks.length - 1][6];
 
-  const [jobs, properties] = await Promise.all([
+  const [jobs, properties, jobTypes] = await Promise.all([
     prisma.job.findMany({
       where: {
         scheduledAt: {
@@ -40,6 +40,7 @@ export default async function CalendarioPage({
       orderBy: { name: "asc" },
       include: { units: { where: { active: true }, orderBy: { label: "asc" } } },
     }),
+    prisma.jobType.findMany({ where: { active: true }, orderBy: { name: "asc" } }),
   ]);
 
   const jobsByDay: Record<string, ReturnType<typeof serializeJob>[]> = {};
@@ -94,7 +95,13 @@ export default async function CalendarioPage({
         </div>
       </div>
 
-      <CalendarGrid days={days} todayKey={todayKey} jobsByDay={jobsByDay} properties={properties} />
+      <CalendarGrid
+        days={days}
+        todayKey={todayKey}
+        jobsByDay={jobsByDay}
+        properties={properties}
+        jobTypes={jobTypes}
+      />
 
       <div className="flex gap-4 text-xs text-gray-500">
         <span className="flex items-center gap-1">

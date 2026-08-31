@@ -9,6 +9,7 @@ import { getCurrentUser } from "@/lib/session";
 const jobSchema = z.object({
   propertyId: z.string().min(1, "Selecciona una propiedad"),
   unitId: z.string().optional(),
+  jobTypeId: z.string().optional(),
   title: z.string().min(1, "Título requerido"),
   description: z.string().optional(),
   scheduledAt: z.coerce.date({ message: "Fecha y hora inválidas" }),
@@ -20,9 +21,11 @@ export async function createJob(formData: FormData) {
   if (!user) return { error: "No autorizado." };
 
   const rawUnitId = formData.get("unitId");
+  const rawJobTypeId = formData.get("jobTypeId");
   const parsed = jobSchema.safeParse({
     propertyId: formData.get("propertyId"),
     unitId: rawUnitId ? String(rawUnitId) : undefined,
+    jobTypeId: rawJobTypeId ? String(rawJobTypeId) : undefined,
     title: formData.get("title"),
     description: formData.get("description") || undefined,
     scheduledAt: formData.get("scheduledAt"),
@@ -32,12 +35,13 @@ export async function createJob(formData: FormData) {
     return { error: parsed.error.issues[0]?.message ?? "Datos inválidos" };
   }
 
-  const { unitId, ...rest } = parsed.data;
+  const { unitId, jobTypeId, ...rest } = parsed.data;
 
   const job = await prisma.job.create({
     data: {
       ...rest,
       unitId: unitId || null,
+      jobTypeId: jobTypeId || null,
       createdById: user.id,
     },
   });
@@ -51,9 +55,11 @@ export async function updateJob(jobId: string, formData: FormData) {
   if (!user) return { error: "No autorizado." };
 
   const rawUnitId = formData.get("unitId");
+  const rawJobTypeId = formData.get("jobTypeId");
   const parsed = jobSchema.safeParse({
     propertyId: formData.get("propertyId"),
     unitId: rawUnitId ? String(rawUnitId) : undefined,
+    jobTypeId: rawJobTypeId ? String(rawJobTypeId) : undefined,
     title: formData.get("title"),
     description: formData.get("description") || undefined,
     scheduledAt: formData.get("scheduledAt"),
@@ -63,11 +69,11 @@ export async function updateJob(jobId: string, formData: FormData) {
     return { error: parsed.error.issues[0]?.message ?? "Datos inválidos" };
   }
 
-  const { unitId, ...rest } = parsed.data;
+  const { unitId, jobTypeId, ...rest } = parsed.data;
 
   await prisma.job.update({
     where: { id: jobId },
-    data: { ...rest, unitId: unitId || null },
+    data: { ...rest, unitId: unitId || null, jobTypeId: jobTypeId || null },
   });
 
   revalidatePath("/calendario");

@@ -9,7 +9,7 @@ type LineItem = {
   type: "MATERIAL" | "LABOR";
   description: string;
   quantity: number;
-  unitPrice: number;
+  unitPrice: number | null;
   note: string | null;
   createdByName: string;
 };
@@ -18,13 +18,15 @@ export function LineItemList({
   jobId,
   items,
   editable,
+  pricesVisible,
 }: {
   jobId: string;
   items: LineItem[];
   editable: boolean;
+  pricesVisible: boolean;
 }) {
   const [isPending, startTransition] = useTransition();
-  const total = items.reduce((sum, i) => sum + i.quantity * i.unitPrice, 0);
+  const total = pricesVisible ? items.reduce((sum, i) => sum + i.quantity * (i.unitPrice ?? 0), 0) : 0;
 
   if (items.length === 0) {
     return <div className="text-sm text-gray-500">Todavía no se ha registrado nada.</div>;
@@ -43,7 +45,13 @@ export function LineItemList({
                 </span>
               </div>
               <div className="text-xs text-gray-500">
-                {item.quantity} × {formatMoney(item.unitPrice)} = {formatMoney(item.quantity * item.unitPrice)}
+                {pricesVisible && item.unitPrice !== null ? (
+                  <>
+                    {item.quantity} × {formatMoney(item.unitPrice)} = {formatMoney(item.quantity * item.unitPrice)}
+                  </>
+                ) : (
+                  <>Cantidad: {item.quantity}</>
+                )}
                 {item.note && ` · ${item.note}`}
               </div>
             </div>
@@ -59,7 +67,7 @@ export function LineItemList({
           </div>
         ))}
       </div>
-      <div className="text-right text-sm font-semibold">Total: {formatMoney(total)}</div>
+      {pricesVisible && <div className="text-right text-sm font-semibold">Total: {formatMoney(total)}</div>}
     </div>
   );
 }

@@ -5,6 +5,7 @@ import Link from "next/link";
 import { createJob } from "../actions";
 import { PropertyUnitSelect } from "@/components/PropertyUnitSelect";
 import { DurationSelect } from "@/components/DurationSelect";
+import { JobTypeSelect } from "@/components/JobTypeSelect";
 
 type PropertyOption = {
   id: string;
@@ -12,11 +13,15 @@ type PropertyOption = {
   units: { id: string; label: string }[];
 };
 
+type JobType = { id: string; name: string };
+
 export function JobForm({
   properties,
+  jobTypes,
   defaultDate,
 }: {
   properties: PropertyOption[];
+  jobTypes: JobType[];
   defaultDate?: string;
 }) {
   const [error, setError] = useState<string | null>(null);
@@ -54,22 +59,11 @@ export function JobForm({
 
       <PropertyUnitSelect properties={properties} />
 
-      <div className="space-y-1">
-        <label className="text-sm font-medium" htmlFor="title">
-          Título del trabajo
-        </label>
-        <input
-          id="title"
-          name="title"
-          required
-          placeholder="Ej. Reparar fuga en baño"
-          className="input-field"
-        />
-      </div>
+      <JobTypeSelect jobTypes={jobTypes} />
 
       <div className="space-y-1">
         <label className="text-sm font-medium" htmlFor="description">
-          Descripción
+          Detalles del trabajo
         </label>
         <textarea
           id="description"

@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { prisma } from "@/lib/prisma";
+import { getCurrentUser, canSeePricing } from "@/lib/session";
 import { JobStatusBadge } from "@/components/JobStatusBadge";
 import { LineItemForm } from "./LineItemForm";
 import { LineItemList } from "./LineItemList";
@@ -16,6 +17,8 @@ export default async function CompletarTrabajoPage({
   params: Promise<{ id: string }>;
 }) {
   const { id } = await params;
+  const user = await getCurrentUser();
+  const pricesVisible = canSeePricing(user?.role);
 
   const job = await prisma.job.findUnique({
     where: { id },
@@ -60,25 +63,34 @@ export default async function CompletarTrabajoPage({
 
       <section className="space-y-2">
         <h2 className="font-medium">Tiempo y materiales</h2>
-        <p className="text-xs text-gray-500">
-          Los precios se sugieren del catálogo, pero puedes ajustarlos para este trabajo.
-        </p>
-        {editable && <LineItemForm jobId={job.id} catalogItems={catalogItems.map((c) => ({
-          id: c.id,
-          type: c.type,
-          name: c.name,
-          unitLabel: c.unitLabel,
-          unitPrice: Number(c.unitPrice),
-        }))} />}
+        {pricesVisible && (
+          <p className="text-xs text-gray-500">
+            Los precios se sugieren del catálogo, pero puedes ajustarlos para este trabajo.
+          </p>
+        )}
+        {editable && (
+          <LineItemForm
+            jobId={job.id}
+            pricesVisible={pricesVisible}
+            catalogItems={catalogItems.map((c) => ({
+              id: c.id,
+              type: c.type,
+              name: c.name,
+              unitLabel: c.unitLabel,
+              unitPrice: pricesVisible ? Number(c.unitPrice) : null,
+            }))}
+          />
+        )}
         <LineItemList
           jobId={job.id}
           editable={editable}
+          pricesVisible={pricesVisible}
           items={job.lineItems.map((i) => ({
             id: i.id,
             type: i.type,
             description: i.description,
             quantity: Number(i.quantity),
-            unitPrice: Number(i.unitPrice),
+            unitPrice: pricesVisible ? Number(i.unitPrice) : null,
             note: i.note,
             createdByName: i.createdBy.name,
           }))}

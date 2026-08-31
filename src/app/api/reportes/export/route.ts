@@ -1,10 +1,10 @@
 import { NextResponse } from "next/server";
-import { getCurrentUser } from "@/lib/session";
+import { getCurrentUser, canSeePricing } from "@/lib/session";
 import { getReportData, reportToCsv } from "@/lib/reports";
 
 export async function GET(request: Request) {
   const user = await getCurrentUser();
-  if (!user) {
+  if (!user || !canSeePricing(user.role)) {
     return NextResponse.json({ error: "No autorizado" }, { status: 401 });
   }
 

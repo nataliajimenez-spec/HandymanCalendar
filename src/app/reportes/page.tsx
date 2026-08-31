@@ -2,6 +2,7 @@ import Link from "next/link";
 import { format, startOfMonth } from "date-fns";
 import { getReportData } from "@/lib/reports";
 import { formatMoney } from "@/lib/money";
+import { getCurrentUser, canSeePricing } from "@/lib/session";
 
 export const dynamic = "force-dynamic";
 
@@ -17,6 +18,15 @@ export default async function ReportesPage({
 }: {
   searchParams: Promise<{ start?: string; end?: string }>;
 }) {
+  const user = await getCurrentUser();
+  if (!user || !canSeePricing(user.role)) {
+    return (
+      <div className="text-sm text-gray-600">
+        Solo administración/oficina puede ver los reportes de costos.
+      </div>
+    );
+  }
+
   const params = await searchParams;
   const { start, end } = parseRange(params.start, params.end);
   const startStr = format(start, "yyyy-MM-dd");

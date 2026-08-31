@@ -4,6 +4,7 @@ import { useState, useTransition } from "react";
 import { updateJob } from "../actions";
 import { PropertyUnitSelect } from "@/components/PropertyUnitSelect";
 import { DurationSelect } from "@/components/DurationSelect";
+import { JobTypeSelect } from "@/components/JobTypeSelect";
 
 type PropertyOption = {
   id: string;
@@ -11,10 +12,14 @@ type PropertyOption = {
   units: { id: string; label: string }[];
 };
 
+type JobType = { id: string; name: string };
+
 export function JobEditForm({
   jobId,
   properties,
+  jobTypes,
   title,
+  jobTypeId,
   description,
   scheduledAtLocal,
   propertyId,
@@ -23,7 +28,9 @@ export function JobEditForm({
 }: {
   jobId: string;
   properties: PropertyOption[];
+  jobTypes: JobType[];
   title: string;
+  jobTypeId: string | null;
   description: string | null;
   scheduledAtLocal: string;
   propertyId: string;
@@ -61,18 +68,7 @@ export function JobEditForm({
         defaultUnitId={unitId ?? undefined}
       />
 
-      <div className="space-y-1">
-        <label className="text-sm font-medium" htmlFor="title">
-          Título
-        </label>
-        <input
-          id="title"
-          name="title"
-          required
-          defaultValue={title}
-          className="input-field"
-        />
-      </div>
+      <JobTypeSelect jobTypes={jobTypes} defaultJobTypeId={jobTypeId} defaultTitle={title} />
 
       <div className="space-y-1">
         <label className="text-sm font-medium" htmlFor="description">

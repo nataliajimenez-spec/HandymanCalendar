@@ -37,6 +37,12 @@ export function UnitForm({ propertyId }: { propertyId: string }) {
           className="input-field"
         />
       </div>
+      <div className="min-w-[170px]">
+        <select name="managementType" defaultValue="LONG_TERM" className="input-field">
+          <option value="LONG_TERM">Long-term management</option>
+          <option value="SHORT_TERM">Short-term management</option>
+        </select>
+      </div>
       <button
         type="submit"
         disabled={isPending}
