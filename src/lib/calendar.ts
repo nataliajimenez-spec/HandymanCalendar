@@ -27,3 +27,10 @@ export function dateKey(d: Date) {
     d.getDate()
   ).padStart(2, "0")}`;
 }
+
+/** Los 7 días (dom-sáb) de la semana que contiene `date`. */
+export function buildWeekDays(date: Date) {
+  const start = startOfWeek(date, { weekStartsOn: 0 });
+  const end = endOfWeek(date, { weekStartsOn: 0 });
+  return eachDayOfInterval({ start, end });
+}

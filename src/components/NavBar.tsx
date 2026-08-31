@@ -6,6 +6,7 @@ import { signOut, useSession } from "next-auth/react";
 import { roleLabel } from "@/lib/roles";
 
 const LINKS = [
+  { href: "/", label: "Inicio", exact: true },
   { href: "/calendario", label: "Calendario" },
   { href: "/propiedades", label: "Propiedades" },
   { href: "/catalogo", label: "Catálogo", officeOnly: true },
@@ -36,7 +37,7 @@ export function NavBar() {
               if (link.officeOnly && session.user.role === "HANDYMAN") return false;
               return true;
             }).map((link) => {
-              const active = pathname?.startsWith(link.href);
+              const active = link.exact ? pathname === link.href : pathname?.startsWith(link.href);
               return (
                 <Link
                   key={link.href}

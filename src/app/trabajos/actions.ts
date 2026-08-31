@@ -113,3 +113,26 @@ export async function reopenJob(jobId: string) {
   revalidatePath(`/trabajos/${jobId}`);
   return { success: true };
 }
+
+export async function rescheduleJob(jobId: string, newScheduledAtISO: string) {
+  const user = await getCurrentUser();
+  if (!user) return { error: "No autorizado." };
+
+  const scheduledAt = new Date(newScheduledAtISO);
+  if (Number.isNaN(scheduledAt.getTime())) {
+    return { error: "Fecha inválida." };
+  }
+
+  const job = await prisma.job.findUnique({ where: { id: jobId }, select: { status: true } });
+  if (!job) return { error: "Trabajo no encontrado." };
+  if (job.status !== "SCHEDULED") {
+    return { error: "Solo se pueden mover trabajos agendados." };
+  }
+
+  await prisma.job.update({ where: { id: jobId }, data: { scheduledAt } });
+
+  revalidatePath("/calendario");
+  revalidatePath("/calendario/semana");
+  revalidatePath(`/trabajos/${jobId}`);
+  return { success: true };
+}

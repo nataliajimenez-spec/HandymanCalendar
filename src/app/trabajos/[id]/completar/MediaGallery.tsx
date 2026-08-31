@@ -6,28 +6,33 @@ import { removeMedia } from "./actions";
 type Media = {
   id: string;
   type: "PHOTO" | "VIDEO";
+  phase: "BEFORE" | "AFTER" | "OTHER";
   url: string;
   fileName: string | null;
 };
 
-export function MediaGallery({
+const GROUPS: { phase: Media["phase"]; label: string }[] = [
+  { phase: "BEFORE", label: "Antes" },
+  { phase: "AFTER", label: "Después" },
+  { phase: "OTHER", label: "Otros" },
+];
+
+function MediaGrid({
   jobId,
-  media,
+  items,
   editable,
+  isPending,
+  startTransition,
 }: {
   jobId: string;
-  media: Media[];
+  items: Media[];
   editable: boolean;
+  isPending: boolean;
+  startTransition: (fn: () => Promise<void> | void) => void;
 }) {
-  const [isPending, startTransition] = useTransition();
-
-  if (media.length === 0) {
-    return <div className="text-sm text-gray-500">Sin fotos ni video todavía.</div>;
-  }
-
   return (
     <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
-      {media.map((m) => (
+      {items.map((m) => (
         <div key={m.id} className="relative border rounded overflow-hidden bg-black/5">
           {m.type === "PHOTO" ? (
             // eslint-disable-next-line @next/next/no-img-element
@@ -46,6 +51,43 @@ export function MediaGallery({
           )}
         </div>
       ))}
+    </div>
+  );
+}
+
+export function MediaGallery({
+  jobId,
+  media,
+  editable,
+}: {
+  jobId: string;
+  media: Media[];
+  editable: boolean;
+}) {
+  const [isPending, startTransition] = useTransition();
+
+  if (media.length === 0) {
+    return <div className="text-sm text-gray-500">Sin fotos ni video todavía.</div>;
+  }
+
+  return (
+    <div className="space-y-4">
+      {GROUPS.map(({ phase, label }) => {
+        const items = media.filter((m) => m.phase === phase);
+        if (items.length === 0) return null;
+        return (
+          <div key={phase} className="space-y-1.5">
+            <h3 className="text-xs font-semibold uppercase tracking-wide text-gray-400">{label}</h3>
+            <MediaGrid
+              jobId={jobId}
+              items={items}
+              editable={editable}
+              isPending={isPending}
+              startTransition={startTransition}
+            />
+          </div>
+        );
+      })}
     </div>
   );
 }

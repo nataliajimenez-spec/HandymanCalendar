@@ -205,10 +205,17 @@ enum MediaType {
   VIDEO
 }
 
+enum MediaPhase {
+  BEFORE
+  AFTER
+  OTHER
+}
+
 model JobMedia {
-  id       String    @id @default(cuid())
+  id       String     @id @default(cuid())
   jobId    String
   type     MediaType
+  phase    MediaPhase @default(OTHER)
   url      String
   fileName String?
 

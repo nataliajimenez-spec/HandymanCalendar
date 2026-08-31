@@ -97,13 +97,27 @@ export default async function CompletarTrabajoPage({
         />
       </section>
 
-      <section className="space-y-2">
+      <section className="space-y-3">
         <h2 className="font-medium">Fotos y video</h2>
-        {editable && <MediaUploader jobId={job.id} />}
+        {editable && (
+          <div className="grid gap-2 sm:grid-cols-2">
+            <MediaUploader jobId={job.id} phase="BEFORE" label="Fotos - Antes" accept="image/*" />
+            <MediaUploader jobId={job.id} phase="AFTER" label="Fotos - Después" accept="image/*" />
+            <div className="sm:col-span-2">
+              <MediaUploader jobId={job.id} phase="OTHER" label="Video / otros" />
+            </div>
+          </div>
+        )}
         <MediaGallery
           jobId={job.id}
           editable={editable}
-          media={job.media.map((m) => ({ id: m.id, type: m.type, url: m.url, fileName: m.fileName }))}
+          media={job.media.map((m) => ({
+            id: m.id,
+            type: m.type,
+            phase: m.phase,
+            url: m.url,
+            fileName: m.fileName,
+          }))}
         />
       </section>
 

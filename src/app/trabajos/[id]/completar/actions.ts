@@ -74,7 +74,12 @@ export async function removeLineItem(jobId: string, lineItemId: string) {
 
 export async function addMedia(
   jobId: string,
-  data: { url: string; type: "PHOTO" | "VIDEO"; fileName?: string }
+  data: {
+    url: string;
+    type: "PHOTO" | "VIDEO";
+    phase?: "BEFORE" | "AFTER" | "OTHER";
+    fileName?: string;
+  }
 ) {
   const user = await getCurrentUser();
   if (!user) return { error: "No autorizado." };
@@ -84,6 +89,7 @@ export async function addMedia(
       jobId,
       url: data.url,
       type: data.type,
+      phase: data.phase ?? "OTHER",
       fileName: data.fileName,
       uploadedById: user.id,
     },

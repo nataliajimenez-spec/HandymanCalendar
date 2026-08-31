@@ -92,6 +92,9 @@ export default async function CalendarioPage({
           >
             Siguiente →
           </Link>
+          <Link href="/calendario/semana" className="btn-secondary text-sm px-3 py-1">
+            Ver semana
+          </Link>
         </div>
       </div>
 

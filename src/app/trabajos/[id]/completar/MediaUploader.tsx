@@ -4,7 +4,17 @@ import { useRef, useState } from "react";
 import { upload } from "@vercel/blob/client";
 import { addMedia } from "./actions";
 
-export function MediaUploader({ jobId }: { jobId: string }) {
+export function MediaUploader({
+  jobId,
+  phase,
+  label,
+  accept = "image/*,video/*",
+}: {
+  jobId: string;
+  phase: "BEFORE" | "AFTER" | "OTHER";
+  label: string;
+  accept?: string;
+}) {
   const inputRef = useRef<HTMLInputElement>(null);
   const [uploading, setUploading] = useState(false);
   const [progress, setProgress] = useState<string | null>(null);
@@ -25,7 +35,7 @@ export function MediaUploader({ jobId }: { jobId: string }) {
           handleUploadUrl: "/api/blob/upload",
         });
         const type = file.type.startsWith("video") ? "VIDEO" : "PHOTO";
-        await addMedia(jobId, { url: blob.url, type, fileName: file.name });
+        await addMedia(jobId, { url: blob.url, type, phase, fileName: file.name });
       }
     } catch (e) {
       setError((e as Error).message || "No se pudo subir el archivo.");
@@ -37,11 +47,12 @@ export function MediaUploader({ jobId }: { jobId: string }) {
   }
 
   return (
-    <div className="space-y-2">
+    <div className="space-y-1">
+      <label className="field-label">{label}</label>
       <input
         ref={inputRef}
         type="file"
-        accept="image/*,video/*"
+        accept={accept}
         multiple
         onChange={(e) => handleFiles(e.target.files)}
         disabled={uploading}

@@ -39,11 +39,12 @@ export function NewJobModal({
   if (!date) return null;
 
   const defaultDateTime = `${date}T09:00`;
-  const niceDate = new Date(`${date}T00:00:00`).toLocaleDateString("es-PR", {
+  const rawNiceDate = new Date(`${date}T00:00:00`).toLocaleDateString("es-PR", {
     weekday: "long",
     day: "numeric",
     month: "long",
   });
+  const niceDate = rawNiceDate.charAt(0).toUpperCase() + rawNiceDate.slice(1);
 
   function handleSubmit(formData: FormData) {
     setError(null);
@@ -65,7 +66,7 @@ export function NewJobModal({
         <div className="flex items-start justify-between gap-2">
           <div>
             <h2 className="text-lg font-semibold text-gray-900">Nuevo trabajo</h2>
-            <p className="text-sm capitalize text-gray-500">{niceDate}</p>
+            <p className="text-sm text-gray-500">{niceDate}</p>
           </div>
           <button
             onClick={onClose}
