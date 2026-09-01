@@ -5,6 +5,7 @@ import { createJob } from "../trabajos/actions";
 import { PropertyUnitSelect } from "@/components/PropertyUnitSelect";
 import { DurationSelect } from "@/components/DurationSelect";
 import { JobTypeSelect } from "@/components/JobTypeSelect";
+import { JobMediaPicker } from "@/components/JobMediaPicker";
 
 type PropertyOption = {
   id: string;
@@ -13,16 +14,19 @@ type PropertyOption = {
 };
 
 type JobType = { id: string; name: string };
+type UnitReservation = { checkIn: string; checkOut: string; guestName: string | null };
 
 export function NewJobModal({
   date,
   properties,
   jobTypes,
+  availabilityByUnit,
   onClose,
 }: {
   date: string | null;
   properties: PropertyOption[];
   jobTypes: JobType[];
+  availabilityByUnit?: Record<string, UnitReservation[]>;
   onClose: () => void;
 }) {
   const [error, setError] = useState<string | null>(null);
@@ -85,7 +89,11 @@ export function NewJobModal({
           <form action={handleSubmit} className="space-y-3">
             {error && <div className="alert-error">{error}</div>}
 
-            <PropertyUnitSelect properties={properties} />
+            <PropertyUnitSelect
+              properties={properties}
+              availabilityByUnit={availabilityByUnit}
+              refDate={date}
+            />
 
             <JobTypeSelect jobTypes={jobTypes} idPrefix="modal-" />
 
@@ -111,6 +119,14 @@ export function NewJobModal({
             </div>
 
             <DurationSelect />
+
+            <div className="space-y-2 border-t border-gray-100 pt-3">
+              <p className="field-label">Fotos (opcional)</p>
+              <div className="grid grid-cols-2 gap-2">
+                <JobMediaPicker fieldName="media_BEFORE" label="Antes" />
+                <JobMediaPicker fieldName="media_AFTER" label="Después" />
+              </div>
+            </div>
 
             <div className="flex gap-2 pt-1">
               <button type="submit" disabled={isPending} className="btn-primary flex-1">

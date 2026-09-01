@@ -8,6 +8,7 @@ import { roleLabel } from "@/lib/roles";
 const LINKS = [
   { href: "/", label: "Inicio", exact: true },
   { href: "/calendario", label: "Calendario" },
+  { href: "/disponibilidad", label: "Disponibilidad" },
   { href: "/propiedades", label: "Propiedades" },
   { href: "/catalogo", label: "Catálogo", officeOnly: true },
   { href: "/reportes", label: "Reportes", officeOnly: true },

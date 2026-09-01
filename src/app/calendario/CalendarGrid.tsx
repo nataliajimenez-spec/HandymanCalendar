@@ -20,6 +20,7 @@ type PropertyOption = {
 };
 
 type JobType = { id: string; name: string };
+type UnitReservation = { checkIn: string; checkOut: string; guestName: string | null };
 
 const WEEKDAY_NAMES = ["Dom", "Lun", "Mar", "Mié", "Jue", "Vie", "Sáb"];
 
@@ -29,12 +30,14 @@ export function CalendarGrid({
   jobsByDay,
   properties,
   jobTypes,
+  availabilityByUnit,
 }: {
   days: { key: string; day: number; inCurrentMonth: boolean }[];
   todayKey: string;
   jobsByDay: Record<string, CalendarJob[]>;
   properties: PropertyOption[];
   jobTypes: JobType[];
+  availabilityByUnit?: Record<string, UnitReservation[]>;
 }) {
   const [modalDate, setModalDate] = useState<string | null>(null);
 
@@ -116,6 +119,7 @@ export function CalendarGrid({
         date={modalDate}
         properties={properties}
         jobTypes={jobTypes}
+        availabilityByUnit={availabilityByUnit}
         onClose={() => setModalDate(null)}
       />
     </>

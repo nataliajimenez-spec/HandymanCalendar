@@ -31,6 +31,10 @@ desplegada en Vercel con base de datos en Supabase.
   materiales) para facturar. Exportable a CSV.
 - **Usuarios** (`/usuarios`, solo administradores) — crear cuentas del
   equipo y asignar rol.
+- **Disponibilidad** (`/disponibilidad`) — check-in/check-out de las
+  unidades short-term, sincronizados desde **Guesty** (el PMS), para que el
+  handyman agende arreglos sin chocar con un huésped. Ver
+  [Integración con Guesty](#integración-con-guesty) más abajo.
 
 ## Modelo de datos (`prisma/schema.prisma`)
 
@@ -44,7 +48,12 @@ desplegada en Vercel con base de datos en Supabase.
   obra), con el precio tomado del catálogo al momento de crearse pero
   editable manualmente por trabajo.
 - `JobMedia` — fotos/video del trabajo (solo se guarda la URL; el archivo
-  vive en Vercel Blob).
+  vive en Vercel Blob). Se pueden subir desde que se agenda el trabajo
+  (fotos de "antes"/"después" al crear) o al completarlo.
+- `GuestyReservation` — cache local de las reservas (check-in/check-out) de
+  Guesty para las unidades short-term, usado por `/disponibilidad` y por el
+  aviso de ocupación al agendar un trabajo. `Unit.guestyListingId` conecta
+  cada unidad con su listing en Guesty.
 
 ## Desarrollo local
 
@@ -80,6 +89,46 @@ Ver `.env.example` para el detalle de cada una:
   `openssl rand -base64 32`.
 - `NEXTAUTH_URL` — URL pública de la app.
 - `BLOB_READ_WRITE_TOKEN` — token de Vercel Blob para subir fotos/video.
+- `GUESTY_CLIENT_ID` / `GUESTY_CLIENT_SECRET` — credenciales de un API
+  Client de Guesty (opcional; sin esto la app funciona igual, solo no se
+  puede sincronizar disponibilidad). Ver
+  [Integración con Guesty](#integración-con-guesty).
+
+## Integración con Guesty
+
+La app puede halar (solo lectura) los check-in/check-out de las unidades
+short-term desde Guesty, para que el handyman vea qué propiedades están
+disponibles antes de agendar un arreglo.
+
+### 1. Crear las credenciales en Guesty
+
+1. En el panel de Guesty, ve a **Integrations → Guesty API** (o pide acceso
+   a tu Guesty Account Manager si no lo ves) y crea un **API Client** nuevo
+   con scope `open-api`.
+2. Copia el **Client ID** y **Client Secret** que te da Guesty.
+3. Agrégalos como variables de entorno (`GUESTY_CLIENT_ID`,
+   `GUESTY_CLIENT_SECRET`) en tu `.env` local y/o en Vercel → **Settings →
+   Environment Variables**.
+
+### 2. Conectar cada unidad con su listing
+
+1. En Guesty, copia el **Listing ID** de cada propiedad short-term
+   (aparece en la URL del listing o en su ficha).
+2. En la app, ve a `/propiedades/[id]`, marca la unidad como
+   **Short-term management** y pega el Listing ID en el campo "Guesty
+   Listing ID" que aparece debajo.
+
+### 3. Sincronizar
+
+Ve a `/disponibilidad` y presiona **Sincronizar con Guesty**. Esto trae las
+reservas de los próximos ~4 meses (y los últimos 3 días) para todas las
+unidades conectadas, y las guarda en `GuestyReservation`. Repite cada vez
+que quieras refrescar los datos — no hay sincronización automática en
+segundo plano todavía.
+
+Con eso sincronizado, al agendar un trabajo sobre una unidad short-term el
+modal de "Nuevo trabajo" muestra si esa unidad está ocupada o disponible
+el día elegido.
 
 ## Despliegue en producción (Vercel + Supabase)
 

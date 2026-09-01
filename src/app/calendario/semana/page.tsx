@@ -20,12 +20,15 @@ export default async function SemanaPage({
   const weekStart = week[0];
   const weekEnd = week[6];
 
-  const [jobs, properties, jobTypes] = await Promise.all([
+  const weekStartExact = new Date(weekStart.getFullYear(), weekStart.getMonth(), weekStart.getDate());
+  const weekEndExclusive = new Date(weekEnd.getFullYear(), weekEnd.getMonth(), weekEnd.getDate() + 1);
+
+  const [jobs, properties, jobTypes, guestyReservations] = await Promise.all([
     prisma.job.findMany({
       where: {
         scheduledAt: {
-          gte: new Date(weekStart.getFullYear(), weekStart.getMonth(), weekStart.getDate()),
-          lt: new Date(weekEnd.getFullYear(), weekEnd.getMonth(), weekEnd.getDate() + 1),
+          gte: weekStartExact,
+          lt: weekEndExclusive,
         },
       },
       include: { property: true, unit: true },
@@ -37,7 +40,26 @@ export default async function SemanaPage({
       include: { units: { where: { active: true }, orderBy: { label: "asc" } } },
     }),
     prisma.jobType.findMany({ where: { active: true }, orderBy: { name: "asc" } }),
+    prisma.guestyReservation.findMany({
+      where: { checkIn: { lt: weekEndExclusive }, checkOut: { gt: weekStartExact } },
+      orderBy: { checkIn: "asc" },
+    }),
   ]);
+
+  const availabilityByUnit: Record<string, { checkIn: string; checkOut: string; guestName: string | null }[]> = {};
+  for (const p of properties) {
+    for (const u of p.units) {
+      if (u.guestyListingId) availabilityByUnit[u.id] = [];
+    }
+  }
+  for (const r of guestyReservations) {
+    if (!availabilityByUnit[r.unitId]) availabilityByUnit[r.unitId] = [];
+    availabilityByUnit[r.unitId].push({
+      checkIn: r.checkIn.toISOString(),
+      checkOut: r.checkOut.toISOString(),
+      guestName: r.guestName,
+    });
+  }
 
   const todayKey = dateKey(now);
   const jobsByDay = new Map<string, typeof jobs>();
@@ -86,13 +108,13 @@ export default async function SemanaPage({
           <Link href={`/calendario/semana?date=${nextWeekDate}`} className="btn-secondary text-sm px-3 py-1">
             Siguiente →
           </Link>
-          <Link href="/calendario" className="btn-secondary text-sm px-3 py-1">
+          <Link href="/calendario" className="btn-primary text-sm px-3 py-1">
             Ver mes
           </Link>
         </div>
       </div>
 
-      <WeekView days={days} properties={properties} jobTypes={jobTypes} />
+      <WeekView days={days} properties={properties} jobTypes={jobTypes} availabilityByUnit={availabilityByUnit} />
     </div>
   );
 }

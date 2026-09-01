@@ -24,12 +24,14 @@ export default async function CalendarioPage({
   const gridStart = weeks[0][0];
   const gridEnd = weeks[weeks.length - 1][6];
 
-  const [jobs, properties, jobTypes] = await Promise.all([
+  const gridEndExclusive = new Date(gridEnd.getFullYear(), gridEnd.getMonth(), gridEnd.getDate() + 1);
+
+  const [jobs, properties, jobTypes, guestyReservations] = await Promise.all([
     prisma.job.findMany({
       where: {
         scheduledAt: {
           gte: gridStart,
-          lt: new Date(gridEnd.getFullYear(), gridEnd.getMonth(), gridEnd.getDate() + 1),
+          lt: gridEndExclusive,
         },
       },
       include: { property: true, unit: true },
@@ -41,7 +43,26 @@ export default async function CalendarioPage({
       include: { units: { where: { active: true }, orderBy: { label: "asc" } } },
     }),
     prisma.jobType.findMany({ where: { active: true }, orderBy: { name: "asc" } }),
+    prisma.guestyReservation.findMany({
+      where: { checkIn: { lt: gridEndExclusive }, checkOut: { gt: gridStart } },
+      orderBy: { checkIn: "asc" },
+    }),
   ]);
+
+  const availabilityByUnit: Record<string, { checkIn: string; checkOut: string; guestName: string | null }[]> = {};
+  for (const p of properties) {
+    for (const u of p.units) {
+      if (u.guestyListingId) availabilityByUnit[u.id] = [];
+    }
+  }
+  for (const r of guestyReservations) {
+    if (!availabilityByUnit[r.unitId]) availabilityByUnit[r.unitId] = [];
+    availabilityByUnit[r.unitId].push({
+      checkIn: r.checkIn.toISOString(),
+      checkOut: r.checkOut.toISOString(),
+      guestName: r.guestName,
+    });
+  }
 
   const jobsByDay: Record<string, ReturnType<typeof serializeJob>[]> = {};
   function serializeJob(job: (typeof jobs)[number]) {
@@ -92,7 +113,7 @@ export default async function CalendarioPage({
           >
             Siguiente →
           </Link>
-          <Link href="/calendario/semana" className="btn-secondary text-sm px-3 py-1">
+          <Link href="/calendario/semana" className="btn-primary text-sm px-3 py-1">
             Ver semana
           </Link>
         </div>
@@ -104,6 +125,7 @@ export default async function CalendarioPage({
         jobsByDay={jobsByDay}
         properties={properties}
         jobTypes={jobTypes}
+        availabilityByUnit={availabilityByUnit}
       />
 
       <div className="flex gap-4 text-xs text-gray-500">

@@ -29,6 +29,7 @@ type DayColumn = {
 
 type PropertyOption = { id: string; name: string; units: { id: string; label: string }[] };
 type JobType = { id: string; name: string };
+type UnitReservation = { checkIn: string; checkOut: string; guestName: string | null };
 
 const STATUS_STYLE: Record<WeekJob["status"], string> = {
   SCHEDULED: "bg-orange-100 border-orange-300 text-orange-900",
@@ -47,10 +48,12 @@ export function WeekView({
   days,
   properties,
   jobTypes,
+  availabilityByUnit,
 }: {
   days: DayColumn[];
   properties: PropertyOption[];
   jobTypes: JobType[];
+  availabilityByUnit?: Record<string, UnitReservation[]>;
 }) {
   const router = useRouter();
   const [, startTransition] = useTransition();
@@ -191,7 +194,13 @@ export function WeekView({
         </div>
       </div>
 
-      <NewJobModal date={modalDate} properties={properties} jobTypes={jobTypes} onClose={() => setModalDate(null)} />
+      <NewJobModal
+        date={modalDate}
+        properties={properties}
+        jobTypes={jobTypes}
+        availabilityByUnit={availabilityByUnit}
+        onClose={() => setModalDate(null)}
+      />
     </div>
   );
 }

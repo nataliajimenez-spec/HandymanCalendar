@@ -16,6 +16,23 @@ const jobSchema = z.object({
   durationMinutes: z.coerce.number().int().positive().default(60),
 });
 
+const mediaItemSchema = z.object({
+  url: z.string().url(),
+  type: z.enum(["PHOTO", "VIDEO"]),
+  fileName: z.string().optional(),
+});
+
+/** Lee el JSON que arma JobMediaPicker (input oculto `media_BEFORE`/`media_AFTER`). */
+function parseMediaField(raw: FormDataEntryValue | null) {
+  if (!raw || typeof raw !== "string") return [];
+  try {
+    const parsed = z.array(mediaItemSchema).max(20).safeParse(JSON.parse(raw));
+    return parsed.success ? parsed.data : [];
+  } catch {
+    return [];
+  }
+}
+
 export async function createJob(formData: FormData) {
   const user = await getCurrentUser();
   if (!user) return { error: "No autorizado." };
@@ -37,12 +54,24 @@ export async function createJob(formData: FormData) {
 
   const { unitId, jobTypeId, ...rest } = parsed.data;
 
+  const beforeMedia = parseMediaField(formData.get("media_BEFORE"));
+  const afterMedia = parseMediaField(formData.get("media_AFTER"));
+
   const job = await prisma.job.create({
     data: {
       ...rest,
       unitId: unitId || null,
       jobTypeId: jobTypeId || null,
       createdById: user.id,
+      media:
+        beforeMedia.length + afterMedia.length > 0
+          ? {
+              create: [
+                ...beforeMedia.map((m) => ({ ...m, phase: "BEFORE" as const, uploadedById: user.id })),
+                ...afterMedia.map((m) => ({ ...m, phase: "AFTER" as const, uploadedById: user.id })),
+              ],
+            }
+          : undefined,
     },
   });
 

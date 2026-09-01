@@ -6,6 +6,7 @@ import { createJob } from "../actions";
 import { PropertyUnitSelect } from "@/components/PropertyUnitSelect";
 import { DurationSelect } from "@/components/DurationSelect";
 import { JobTypeSelect } from "@/components/JobTypeSelect";
+import { JobMediaPicker } from "@/components/JobMediaPicker";
 
 type PropertyOption = {
   id: string;
@@ -88,6 +89,14 @@ export function JobForm({
       </div>
 
       <DurationSelect />
+
+      <div className="space-y-2 border-t border-gray-100 pt-3">
+        <p className="field-label">Fotos (opcional)</p>
+        <div className="grid grid-cols-2 gap-2">
+          <JobMediaPicker fieldName="media_BEFORE" label="Antes" />
+          <JobMediaPicker fieldName="media_AFTER" label="Después" />
+        </div>
+      </div>
 
       <button
         type="submit"

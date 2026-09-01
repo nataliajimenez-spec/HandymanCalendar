@@ -110,3 +110,27 @@ export async function setUnitManagementType(
   revalidatePath(`/propiedades/${propertyId}`);
   return { success: true };
 }
+
+export async function setUnitGuestyListingId(propertyId: string, unitId: string, formData: FormData) {
+  const user = await getCurrentUser();
+  if (!user) return { error: "No autorizado." };
+
+  const raw = String(formData.get("guestyListingId") ?? "").trim();
+
+  if (raw) {
+    const existing = await prisma.unit.findFirst({
+      where: { guestyListingId: raw, id: { not: unitId } },
+    });
+    if (existing) {
+      return { error: "Ese Guesty Listing ID ya está asignado a otra unidad." };
+    }
+  }
+
+  await prisma.unit.update({
+    where: { id: unitId },
+    data: { guestyListingId: raw || null },
+  });
+  revalidatePath(`/propiedades/${propertyId}`);
+  revalidatePath("/disponibilidad");
+  return { success: true };
+}

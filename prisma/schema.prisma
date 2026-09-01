@@ -67,20 +67,48 @@ enum ManagementType {
 }
 
 model Unit {
-  id             String         @id @default(cuid())
-  propertyId     String
-  label          String // e.g. "Apto 3B", "Oficina 2"
-  notes          String?
-  managementType ManagementType @default(LONG_TERM)
-  active         Boolean        @default(true)
-  createdAt      DateTime       @default(now())
-  updatedAt      DateTime       @updatedAt
+  id              String         @id @default(cuid())
+  propertyId      String
+  label           String // e.g. "Apto 3B", "Oficina 2"
+  notes           String?
+  managementType  ManagementType @default(LONG_TERM)
+  active          Boolean        @default(true)
+  // ID del listing en Guesty (PMS de short-term rental). Solo aplica a
+  // unidades SHORT_TERM; se usa para halar sus check-in/check-out.
+  guestyListingId String?        @unique
+  createdAt       DateTime       @default(now())
+  updatedAt       DateTime       @updatedAt
 
-  property Property @relation(fields: [propertyId], references: [id], onDelete: Cascade)
-  jobs     Job[]
+  property           Property            @relation(fields: [propertyId], references: [id], onDelete: Cascade)
+  jobs               Job[]
+  guestyReservations GuestyReservation[]
 
   @@unique([propertyId, label])
   @@map("units")
+}
+
+// ---------------------------------------------------------------------------
+// Guesty (PMS) — reservas short-term sincronizadas para saber qué unidades
+// están ocupadas/disponibles y así agendar arreglos entre check-out y
+// check-in. Solo se guarda un cache local; la fuente de verdad es Guesty.
+// ---------------------------------------------------------------------------
+
+model GuestyReservation {
+  id        String   @id @default(cuid())
+  unitId    String
+  guestyId  String   @unique // reservation _id en Guesty
+  status    String // confirmed, checked_in, checked_out, canceled, etc.
+  guestName String?
+  checkIn   DateTime
+  checkOut  DateTime
+  syncedAt  DateTime @default(now())
+
+  unit Unit @relation(fields: [unitId], references: [id], onDelete: Cascade)
+
+  @@index([unitId])
+  @@index([checkIn])
+  @@index([checkOut])
+  @@map("guesty_reservations")
 }
 
 // ---------------------------------------------------------------------------
