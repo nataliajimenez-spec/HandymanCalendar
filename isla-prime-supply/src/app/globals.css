@@ -1,20 +1,22 @@
 @import "tailwindcss";
 
+/* Warm, welcoming island palette: bright cream, sea-glass green, sand,
+   and a touch of sunshine. */
 @theme {
-  --color-ivory: #f8f5ef;
-  --color-linen: #efe8dc;
-  --color-sand-100: #e9dfcf;
-  --color-sand: #d6c6ab;
-  --color-mist: #e4e6e0;
-  --color-stone: #857b6c;
-  --color-stone-dark: #5f574b;
-  --color-palm: #1d2925;
-  --color-palm-soft: #2a3934;
-  --color-brass: #a8865a;
-  --color-brass-light: #c8ad84;
+  --color-cream: #fbf8f3;
+  --color-shell: #f4eee5;
+  --color-sand: #e8dcc8;
+  --color-sand-dark: #cdb894;
+  --color-sea: #2e6b66;
+  --color-sea-dark: #214f4b;
+  --color-sea-light: #e1eeeb;
+  --color-ink: #1f2a29;
+  --color-muted: #5f6a66;
+  --color-sun: #e9a23b;
+  --color-sun-light: #fbefd9;
 
-  --font-serif: var(--font-cormorant), "Cormorant Garamond", Georgia, serif;
-  --font-sans: var(--font-jost), "Jost", ui-sans-serif, system-ui, sans-serif;
+  --font-display: var(--font-fraunces), "Fraunces", Georgia, serif;
+  --font-sans: var(--font-figtree), "Figtree", ui-sans-serif, system-ui, sans-serif;
 }
 
 html {
@@ -22,119 +24,105 @@ html {
 }
 
 body {
-  background-color: var(--color-ivory);
-  color: var(--color-palm);
+  background-color: var(--color-cream);
+  color: var(--color-ink);
   font-family: var(--font-sans);
   -webkit-font-smoothing: antialiased;
 }
 
 ::selection {
-  background: var(--color-brass-light);
-  color: var(--color-palm);
+  background: var(--color-sun-light);
+  color: var(--color-ink);
 }
 
 @utility eyebrow {
-  @apply font-sans text-[0.7rem] font-medium uppercase tracking-[0.32em] text-brass;
+  @apply font-sans text-xs font-semibold uppercase tracking-[0.16em] text-sea;
 }
 
 @utility display {
-  @apply font-serif font-light leading-[1.02] tracking-[-0.01em];
+  @apply font-display font-normal leading-[1.05] tracking-[-0.02em];
 }
 
 @utility btn {
-  @apply inline-flex items-center justify-center gap-3 px-7 py-3.5 font-sans text-[0.72rem] font-medium uppercase tracking-[0.24em] transition-colors duration-300;
+  @apply inline-flex items-center justify-center gap-2 rounded-full px-6 py-3 font-sans text-[0.95rem] font-semibold transition-all duration-200 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-sea active:scale-[0.98];
 }
 
-@utility btn-dark {
-  @apply btn bg-palm text-ivory hover:bg-brass;
+@utility btn-primary {
+  @apply btn bg-sea text-white shadow-[0_8px_20px_-8px_rgba(46,107,102,0.6)] hover:bg-sea-dark;
 }
 
-@utility btn-light {
-  @apply btn bg-ivory text-palm hover:bg-brass hover:text-ivory;
+@utility btn-secondary {
+  @apply btn border border-ink/15 bg-white text-ink hover:border-sea hover:text-sea;
 }
 
-@utility btn-outline {
-  @apply btn border border-palm/30 text-palm hover:border-palm hover:bg-palm hover:text-ivory;
+@utility btn-sun {
+  @apply btn bg-sun text-ink hover:bg-[#f0b14f];
 }
 
-@utility btn-outline-light {
-  @apply btn border border-ivory/30 text-ivory hover:border-ivory hover:bg-ivory hover:text-palm;
-}
-
-@utility link-underline {
-  @apply relative inline-block after:absolute after:-bottom-1 after:left-0 after:h-px after:w-full after:origin-left after:scale-x-0 after:bg-current after:transition-transform after:duration-300 hover:after:scale-x-100;
+@utility btn-ghost-light {
+  @apply btn border border-white/30 text-white hover:bg-white hover:text-sea-dark;
 }
 
 @utility field {
-  @apply w-full border-0 border-b border-palm/25 bg-transparent px-0 py-3 font-sans text-base text-palm transition-colors placeholder:text-stone/70 focus:border-brass focus:outline-none focus:ring-0;
+  @apply w-full rounded-xl border border-ink/15 bg-white px-4 py-3 font-sans text-base text-ink transition placeholder:text-muted/60 focus:border-sea focus:outline-none focus:ring-4 focus:ring-sea/10;
 }
 
 @utility field-label {
-  @apply block font-sans text-[0.68rem] font-medium uppercase tracking-[0.24em] text-stone;
+  @apply mb-1.5 block font-sans text-sm font-medium text-ink;
 }
 
-/* Gentle fade-up as sections scroll into view. CSS-only, so it works even
-   before (or without) JavaScript; browsers without scroll-driven animations
-   simply show the content. */
+@utility card {
+  @apply rounded-3xl border border-ink/[0.07] bg-white;
+}
+
+/* Gentle rise as sections scroll into view. CSS-only, and content stays
+   fully visible at every step (no fading from transparent). */
 @supports (animation-timeline: view()) {
   @media (prefers-reduced-motion: no-preference) {
     .reveal {
       animation: reveal linear both;
       animation-timeline: view();
-      animation-range: entry 0% entry 40%;
+      animation-range: entry 0% entry 35%;
     }
   }
 }
 
 @keyframes reveal {
   from {
-    opacity: 0;
-    transform: translateY(28px);
+    transform: translateY(20px);
   }
   to {
-    opacity: 1;
     transform: none;
   }
 }
 
-/* Slow scrolling ribbon of client types. */
-@keyframes marquee {
-  from {
-    transform: translateX(0);
-  }
-  to {
-    transform: translateX(-50%);
-  }
-}
-
-.marquee-track {
-  animation: marquee 40s linear infinite;
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .marquee-track {
-    animation: none;
-  }
-}
-
-/* Mobile menu built on <details>, so it works without JavaScript. */
-.menu > summary {
+/* Side menu built on <details>: it opens and closes without JavaScript.
+   The backdrop lives inside <summary>, so tapping it closes the menu. */
+.drawer > summary {
   list-style: none;
 }
-.menu > summary::-webkit-details-marker {
+.drawer > summary::-webkit-details-marker {
   display: none;
 }
-
-/* Subtle paper grain for warmth. */
-.grain {
-  position: relative;
+.drawer .drawer-backdrop {
+  display: none;
 }
-.grain::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  opacity: 0.35;
-  mix-blend-mode: multiply;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0.5 0 0 0 0 0.45 0 0 0 0 0.4 0 0 0 0.08 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+.drawer[open] .drawer-backdrop {
+  display: block;
+}
+.drawer[open] .drawer-panel {
+  animation: slide-in 0.28s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+@keyframes slide-in {
+  from {
+    transform: translateX(100%);
+  }
+  to {
+    transform: none;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .drawer[open] .drawer-panel {
+    animation: none;
+  }
 }

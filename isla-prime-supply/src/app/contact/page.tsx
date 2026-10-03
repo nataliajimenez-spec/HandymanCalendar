@@ -1,35 +1,42 @@
 import type { Metadata } from "next";
+import { CheckIcon } from "@/components/Icons";
 import { PageHero } from "@/components/PageHero";
 import { QuoteForm } from "@/components/QuoteForm";
 import { company } from "@/content/site";
 
-export const metadata: Metadata = { title: "Request a Quote" };
+export const metadata: Metadata = { title: "Get a quote" };
 
-export default function ContactPage() {
+export default async function ContactPage({ searchParams }: PageProps<"/contact">) {
+  const { list } = await searchParams;
+  const starterList = typeof list === "string" ? list : "";
+
   return (
     <>
       <PageHero
-        eyebrow="Request a quote"
-        title={<>Let&apos;s outfit your <em className="text-brass">property.</em></>}
-        intro="Tell us about your property and what you need. We'll prepare a tailored selection with wholesale pricing."
+        eyebrow="Get a free quote"
+        title="Tell us what you need."
+        intro="Fill this out and we'll send you wholesale pricing. It's free, and there's no commitment."
       />
-      <section className="mx-auto grid max-w-7xl gap-16 px-5 py-20 sm:px-8 lg:grid-cols-12 lg:py-28">
-        <aside className="space-y-10 lg:col-span-4">
-          {[
-            ["Email", <a key="e" href={`mailto:${company.email}`} className="link-underline break-all">{company.email}</a>],
-            ["Phone", company.phone],
-            ["Hours", company.hours],
-            ["Serving", `Hotels, short-term rentals & property managers across ${company.location}`],
-          ].map(([label, value]) => (
-            <div key={label as string} className="border-t border-palm/10 pt-5">
-              <p className="eyebrow">{label}</p>
-              <p className="mt-3 font-serif text-2xl leading-snug text-palm">{value}</p>
-            </div>
-          ))}
-        </aside>
-        <div className="lg:col-span-7 lg:col-start-6">
-          <QuoteForm />
+      <section className="mx-auto grid max-w-7xl gap-10 px-4 py-12 sm:px-8 lg:grid-cols-12 lg:py-16">
+        <div className="lg:col-span-8">
+          <QuoteForm defaultMessage={starterList} />
         </div>
+        <aside className="space-y-4 lg:col-span-4">
+          <div className="rounded-3xl bg-sea-light p-6">
+            <h2 className="font-display text-xl">What happens next</h2>
+            <ul className="mt-4 space-y-3">
+              {["We review your request", "We send pricing and options", "You decide. No pressure."].map((s) => (
+                <li key={s} className="flex items-center gap-2.5"><CheckIcon className="h-5 w-5 shrink-0 text-sea" />{s}</li>
+              ))}
+            </ul>
+          </div>
+          <div className="rounded-3xl bg-shell p-6">
+            <h2 className="font-display text-xl">Prefer to talk?</h2>
+            <p className="mt-3 select-all font-semibold">{company.phone}</p>
+            <p className="mt-1 select-all break-words font-semibold">{company.email}</p>
+            <p className="mt-2 text-sm text-muted">{company.hours}</p>
+          </div>
+        </aside>
       </section>
     </>
   );

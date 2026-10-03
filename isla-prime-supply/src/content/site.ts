@@ -4,19 +4,19 @@
 export const company = {
   name: "Isla Prime",
   legalName: "Isla Prime Property Management Supply Co.",
-  tagline: "Hotel & Short-Term Rental Supply",
+  tagline: "Hotel & short-term rental supplies",
   location: "Puerto Rico",
   // TODO: replace with the real contact details.
   email: "hello@islaprimesupply.com",
   phone: "(787) 000-0000",
-  hours: "Mon – Fri · 8:00 AM – 5:00 PM AST",
+  hours: "Monday to Friday, 8:00 AM – 5:00 PM",
 };
 
+// Main links, shown in the header on desktop and in the side menu.
 export const nav = [
-  { href: "/collections", label: "Collections" },
-  { href: "/#industries", label: "Who We Serve" },
-  { href: "/#process", label: "How It Works" },
-  { href: "/about", label: "About" },
+  { href: "/catalog", label: "Catalog" },
+  { href: "/about", label: "About us" },
+  { href: "/about#contact", label: "Contact" },
 ];
 
 export type CollectionIconName =
@@ -33,7 +33,7 @@ export type Collection = {
   icon: CollectionIconName;
   description: string;
   items: string[];
-  tone: string;
+  tint: string;
 };
 
 export const collections: Collection[] = [
@@ -41,111 +41,112 @@ export const collections: Collection[] = [
     slug: "bath",
     name: "Bath Linens",
     icon: "towel",
-    description: "Plush, absorbent and built to survive commercial laundering.",
+    description: "Soft, absorbent towels that hold up wash after wash.",
     items: ["Bath & hand towels", "Washcloths", "Bath mats", "Pool & beach towels", "Robes"],
-    tone: "bg-linen",
+    tint: "bg-sea-light text-sea",
   },
   {
     slug: "bed",
     name: "Bed Linens",
     icon: "bed",
-    description: "Crisp, hotel-finish bedding for a five-star first impression.",
+    description: "Crisp sheets and comfy pillows for a hotel-style bed.",
     items: ["Sheet sets", "Duvet covers & inserts", "Pillows & protectors", "Mattress pads", "Throws"],
-    tone: "bg-sand-100",
+    tint: "bg-sun-light text-[#b5761c]",
   },
   {
     slug: "amenities",
     name: "Guest Amenities",
     icon: "amenity",
-    description: "Thoughtful in-room touches that guests remember and review.",
+    description: "Little extras that guests love and mention in reviews.",
     items: ["Bath toiletries", "Dispensers & refills", "Slippers", "Vanity kits", "Welcome items"],
-    tone: "bg-mist",
+    tint: "bg-shell text-[#9a7a4a]",
   },
   {
     slug: "room",
     name: "Room Essentials",
     icon: "room",
-    description: "The finishing pieces that make a room feel complete.",
+    description: "The everyday pieces that make a room feel ready.",
     items: ["Hangers", "Hair dryers", "Luggage racks", "Waste bins", "Blackout solutions"],
-    tone: "bg-linen",
+    tint: "bg-sea-light text-sea",
   },
   {
     slug: "kitchen",
     name: "Kitchen & Dining",
     icon: "kitchen",
-    description: "Everything a fully stocked rental kitchen should have.",
+    description: "Everything for a fully stocked rental kitchen.",
     items: ["Dinnerware & glassware", "Coffee service", "Cookware sets", "Kitchen linens", "Starter packs"],
-    tone: "bg-sand-100",
+    tint: "bg-sun-light text-[#b5761c]",
   },
   {
     slug: "housekeeping",
     name: "Housekeeping",
     icon: "housekeeping",
-    description: "Reliable supplies that keep turnovers fast and consistent.",
+    description: "Supplies that keep every turnover quick and easy.",
     items: ["Cleaning supplies", "Laundry essentials", "Paper goods", "Trash liners", "Carts & caddies"],
-    tone: "bg-mist",
+    tint: "bg-shell text-[#9a7a4a]",
   },
 ];
 
-export const pillars = [
-  {
-    title: "Hotel-grade quality",
-    body: "Textiles and amenities selected to hospitality standards — soft for the guest, durable for the laundry room.",
-  },
-  {
-    title: "Island-based supply",
-    body: "Stock and service based here in Puerto Rico, so you aren't waiting on mainland shipping when it matters.",
-  },
-  {
-    title: "Wholesale pricing",
-    body: "Volume pricing for hotels, rental portfolios and property managers — whether you run five units or five hundred.",
-  },
-  {
-    title: "Restock programs",
-    body: "Recurring orders built around your occupancy, so linen closets never run short on a busy weekend.",
-  },
+export type BenefitIcon = "tag" | "pin" | "box" | "chat";
+
+export const benefits: { icon: BenefitIcon; title: string; body: string }[] = [
+  { icon: "tag", title: "Wholesale prices", body: "Hotel quality without the hotel markup." },
+  { icon: "pin", title: "Right here in PR", body: "Local supply, no waiting on mainland shipping." },
+  { icon: "box", title: "Any size property", body: "From one Airbnb to a full hotel." },
+  { icon: "chat", title: "Free quotes", body: "Tell us what you need. No pressure." },
 ];
 
-export const industries = [
+export const audiences = [
   {
-    eyebrow: "01",
-    title: "Hotels & Resorts",
-    body: "Consistent, high-volume supply for properties where every room needs to feel the same: flawless.",
-    points: ["Bulk linen programs", "Branded amenity options", "Scheduled deliveries"],
+    title: "Airbnb & VRBO hosts",
+    body: "Give guests that boutique-hotel feeling and earn the five-star reviews that keep your calendar full.",
+    points: ["Ready-to-go unit kits", "Guest amenity bundles", "Easy restocks between stays"],
   },
   {
-    eyebrow: "02",
-    title: "Short-Term Rentals",
-    body: "Help your Airbnb or VRBO listing earn five-star reviews with a stay that feels like a boutique hotel.",
-    points: ["Complete unit setup kits", "Guest-ready amenity bundles", "Turnover restocks"],
+    title: "Property managers",
+    body: "One go-to supplier for every unit you manage, with the same quality from the first property to the fiftieth.",
+    points: ["Pricing across your portfolio", "Matching setups for every unit", "One contact for all orders"],
   },
   {
-    eyebrow: "03",
-    title: "Property Managers",
-    body: "One reliable partner for every property in your portfolio, with standards that scale as you grow.",
-    points: ["Portfolio-wide pricing", "Standardized room packages", "Dedicated account support"],
+    title: "Hotels & guest houses",
+    body: "Reliable, consistent supply for every room, so housekeeping always has what it needs.",
+    points: ["Bulk linen orders", "Amenity programs", "Scheduled deliveries"],
   },
 ];
 
 export const steps = [
-  {
-    title: "Tell us about your property",
-    body: "Share your property type, number of rooms or units, and what you need to stock.",
-  },
-  {
-    title: "Receive a tailored proposal",
-    body: "We put together a curated selection and wholesale quote that fits your standards and budget.",
-  },
-  {
-    title: "Delivered & restocked",
-    body: "Your order arrives ready to use — and we can set up recurring restocks so you never run low.",
-  },
+  { title: "Tell us what you need", body: "Send your list, or tell us about your property and we'll help build one." },
+  { title: "Get your quote", body: "We send clear wholesale pricing, usually with a couple of options to choose from." },
+  { title: "Receive & restock", body: "Your order arrives ready to use. Reorder anytime, or set up regular restocks." },
+];
+
+export const accountPerks = [
+  "Reorder your usual items in a few clicks",
+  "See your prices and past orders in one place",
+  "Save lists for each property you manage",
+  "Download invoices whenever you need them",
 ];
 
 export const propertyTypes = [
-  "Hotel / Resort",
-  "Boutique hotel / Inn",
   "Short-term rental (Airbnb, VRBO)",
   "Property management company",
+  "Hotel / Resort",
+  "Boutique hotel / Guest house",
   "Other",
+];
+
+// Starter list planner. Quantities follow the usual hospitality "par 3":
+// one set in use, one in the laundry, one on the shelf.
+export type StarterItem = { name: string; per: "bed" | "bath" | "guest"; qty: number };
+
+export const starterItems: StarterItem[] = [
+  { name: "Sheet sets", per: "bed", qty: 3 },
+  { name: "Duvet covers", per: "bed", qty: 3 },
+  { name: "Pillows", per: "bed", qty: 2 },
+  { name: "Pillow protectors", per: "bed", qty: 2 },
+  { name: "Bath towels", per: "guest", qty: 3 },
+  { name: "Washcloths", per: "guest", qty: 3 },
+  { name: "Hand towels", per: "bath", qty: 3 },
+  { name: "Bath mats", per: "bath", qty: 3 },
+  { name: "Beach towels", per: "guest", qty: 1 },
 ];

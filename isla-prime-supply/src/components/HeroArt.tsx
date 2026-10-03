@@ -7,7 +7,7 @@ type Towel = { y: number; w: number; color: string; band: string };
 const towels: Towel[] = [
   { y: 452, w: 268, color: "#e6dccb", band: "#c9b896" },
   { y: 404, w: 262, color: "#fbf9f4", band: "#d9cdb6" },
-  { y: 356, w: 266, color: "#cfd4cb", band: "#aab3a7" },
+  { y: 356, w: 266, color: "#bfdad3", band: "#8fbab1" },
   { y: 308, w: 258, color: "#fbf9f4", band: "#d9cdb6" },
 ];
 
@@ -45,12 +45,12 @@ export function HeroArt({ className = "" }: { className?: string }) {
     >
       <defs>
         <linearGradient id="arch" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0" stopColor="#e9dfcf" />
-          <stop offset="1" stopColor="#ddcfb7" />
+          <stop offset="0" stopColor="#d6e8e3" />
+          <stop offset="1" stopColor="#c4ddd6" />
         </linearGradient>
         <linearGradient id="archInner" x1="0" y1="0" x2="1" y2="1">
-          <stop offset="0" stopColor="#f3ede2" />
-          <stop offset="1" stopColor="#e6dccb" />
+          <stop offset="0" stopColor="#fbf6ee" />
+          <stop offset="1" stopColor="#efe5d5" />
         </linearGradient>
         <linearGradient id="glass" x1="0" y1="0" x2="1" y2="0">
           <stop offset="0" stopColor="#7d5732" />
@@ -72,13 +72,13 @@ export function HeroArt({ className = "" }: { className?: string }) {
       <path
         d="M74 560V236c0-80.6 65.4-146 146-146h40c80.6 0 146 65.4 146 146v324"
         fill="none"
-        stroke="#a8865a"
-        strokeOpacity="0.45"
+        stroke="#2e6b66"
+        strokeOpacity="0.25"
         strokeWidth="1"
       />
 
       {/* sun through the doorway */}
-      <circle cx="240" cy="190" r="46" fill="#f8f5ef" opacity="0.9" />
+      <circle cx="240" cy="190" r="46" fill="#f6d9a6" />
 
       {/* floor shadow */}
       <ellipse cx="240" cy="506" rx="190" ry="16" fill="url(#floor)" />

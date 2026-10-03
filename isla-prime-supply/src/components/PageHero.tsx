@@ -1,18 +1,10 @@
-export function PageHero({
-  eyebrow,
-  title,
-  intro,
-}: {
-  eyebrow: string;
-  title: React.ReactNode;
-  intro: string;
-}) {
+export function PageHero({ eyebrow, title, intro }: { eyebrow: string; title: React.ReactNode; intro: string }) {
   return (
-    <section className="grain border-b border-palm/10 bg-linen">
-      <div className="mx-auto max-w-7xl px-5 pb-20 pt-16 sm:px-8 lg:pb-24 lg:pt-24">
+    <section className="bg-shell">
+      <div className="mx-auto max-w-7xl px-4 pb-14 pt-12 sm:px-8 lg:pb-20 lg:pt-16">
         <p className="eyebrow">{eyebrow}</p>
-        <h1 className="display mt-6 max-w-4xl text-5xl text-palm sm:text-6xl lg:text-7xl">{title}</h1>
-        <p className="mt-8 max-w-2xl text-lg leading-relaxed text-stone-dark">{intro}</p>
+        <h1 className="display mt-3 max-w-3xl text-balance text-5xl text-ink sm:text-6xl">{title}</h1>
+        <p className="mt-5 max-w-2xl text-lg leading-relaxed text-muted">{intro}</p>
       </div>
     </section>
   );

@@ -1,58 +1,80 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { BenefitGlyph, ClockIcon, MailIcon, PhoneIcon } from "@/components/Icons";
 import { Monogram } from "@/components/Logo";
 import { PageHero } from "@/components/PageHero";
-import { company, pillars } from "@/content/site";
+import { benefits, company } from "@/content/site";
 
-export const metadata: Metadata = { title: "About" };
+export const metadata: Metadata = { title: "About us" };
 
 export default function AboutPage() {
+  const contact = [
+    { icon: MailIcon, label: "Email", value: company.email },
+    { icon: PhoneIcon, label: "Phone", value: company.phone },
+    { icon: ClockIcon, label: "Hours", value: company.hours },
+  ];
+
   return (
     <>
       <PageHero
         eyebrow="About us"
-        title={<>Hospitality, supplied <em className="text-brass">with care.</em></>}
-        intro={`${company.legalName} supplies the linens, amenities and essentials behind memorable stays — for hotels, short-term rentals and property managers in ${company.location}.`}
+        title="Your neighbors in hospitality supply."
+        intro={`${company.legalName} helps hotels, Airbnb hosts and property managers in ${company.location} stock their properties with quality supplies at fair prices.`}
       />
 
-      <section className="mx-auto grid max-w-7xl gap-16 px-5 py-24 sm:px-8 lg:grid-cols-12 lg:py-32">
-        <div className="reveal flex items-center justify-center bg-sand-100 py-20 lg:col-span-5">
-          <Monogram className="h-56 w-auto text-brass" />
+      <section className="mx-auto grid max-w-7xl items-center gap-12 px-4 py-16 sm:px-8 lg:grid-cols-12 lg:py-24">
+        <div className="reveal flex items-center justify-center rounded-[2rem] bg-sea-light py-16 lg:col-span-5">
+          <Monogram className="h-48 w-auto text-sea" />
         </div>
         <div className="reveal lg:col-span-6 lg:col-start-7">
           <p className="eyebrow">Our story</p>
-          <h2 className="display mt-5 text-4xl text-palm sm:text-5xl">
-            Born on the island, <em className="text-brass">built for its hosts.</em>
-          </h2>
-          <div className="mt-8 space-y-5 leading-relaxed text-stone-dark">
+          <h2 className="display mt-3 text-4xl sm:text-5xl">From the island, for the island.</h2>
+          <div className="mt-6 space-y-4 text-lg leading-relaxed text-muted">
             <p>
-              We work alongside the people who welcome guests to Puerto Rico every day. We know
-              that a great stay is made of small things done right — and that running out of
-              towels on a full weekend is never an option.
+              We know what it takes to welcome guests in Puerto Rico. A great stay comes down to small things
+              done right, like soft towels, a well-made bed and a bathroom that&apos;s ready to go.
             </p>
             <p>
-              That&apos;s why we focus on hotel-grade products, honest wholesale pricing and
-              dependable local service, so you can spend less time sourcing and more time
-              hosting.
+              We started Isla Prime to make those things easy to get. You get quality you can count on,
+              honest wholesale prices and a local team that answers when you call.
             </p>
           </div>
-          <Link href="/contact" className="btn-dark mt-10">
-            Work with us <span aria-hidden>→</span>
-          </Link>
         </div>
       </section>
 
-      <section className="border-t border-palm/10 bg-linen">
-        <div className="mx-auto max-w-7xl px-5 py-24 sm:px-8">
-          <p className="eyebrow text-center">What we stand for</p>
-          <div className="mt-14 grid gap-12 sm:grid-cols-2 lg:grid-cols-4">
-            {pillars.map((p) => (
-              <div key={p.title} className="reveal border-t border-brass/50 pt-6">
-                <h3 className="font-serif text-2xl text-palm">{p.title}</h3>
-                <p className="mt-3 text-sm leading-relaxed text-stone-dark">{p.body}</p>
-              </div>
-            ))}
+      <section className="bg-shell">
+        <ul className="mx-auto grid max-w-7xl gap-4 px-4 py-16 sm:grid-cols-2 sm:px-8 lg:grid-cols-4">
+          {benefits.map((b) => (
+            <li key={b.title} className="reveal rounded-3xl bg-white/70 p-6">
+              <span className="flex h-11 w-11 items-center justify-center rounded-full bg-sea-light text-sea"><BenefitGlyph name={b.icon} className="h-5 w-5" /></span>
+              <h3 className="mt-4 font-display text-xl">{b.title}</h3>
+              <p className="mt-1.5 text-muted">{b.body}</p>
+            </li>
+          ))}
+        </ul>
+      </section>
+
+      <section id="contact" className="mx-auto max-w-7xl scroll-mt-28 px-4 py-16 sm:px-8 lg:py-24">
+        <div className="grid gap-10 lg:grid-cols-12">
+          <div className="lg:col-span-5">
+            <p className="eyebrow">Contact</p>
+            <h2 className="display mt-3 text-4xl sm:text-5xl">We&apos;d love to hear from you.</h2>
+            <p className="mt-4 text-lg text-muted">
+              Questions about products, prices or an order? Reach out any way you like.
+            </p>
+            <Link href="/contact" className="btn-primary mt-8">Get a free quote</Link>
           </div>
+          <ul className="grid gap-4 sm:grid-cols-3 lg:col-span-7 lg:grid-cols-1">
+            {contact.map(({ icon: Icon, label, value }) => (
+              <li key={label} className="card flex items-center gap-4 p-5">
+                <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-sea-light text-sea"><Icon className="h-5 w-5" /></span>
+                <span className="min-w-0">
+                  <span className="block text-sm text-muted">{label}</span>
+                  <span className="block select-all break-words font-semibold">{value}</span>
+                </span>
+              </li>
+            ))}
+          </ul>
         </div>
       </section>
     </>

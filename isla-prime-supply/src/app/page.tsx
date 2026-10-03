@@ -1,163 +1,126 @@
 import Link from "next/link";
 import { CollectionIcon } from "@/components/CollectionIcon";
 import { HeroArt } from "@/components/HeroArt";
-import { QuoteForm } from "@/components/QuoteForm";
+import { ArrowIcon, BenefitGlyph, CheckIcon, ClockIcon, MailIcon, PhoneIcon } from "@/components/Icons";
 import { SectionHeading } from "@/components/SectionHeading";
-import { collections, company, industries, pillars, steps } from "@/content/site";
-
-const audiences = [
-  "Hotels",
-  "Boutique Inns",
-  "Resorts",
-  "Airbnb Hosts",
-  "VRBO Hosts",
-  "Property Managers",
-  "Guest Houses",
-  "Vacation Villas",
-];
+import { StarterPlanner } from "@/components/StarterPlanner";
+import { accountPerks, audiences, benefits, collections, company, steps } from "@/content/site";
 
 export default function Home() {
   return (
     <>
       {/* Hero */}
-      <section className="grain overflow-hidden">
-        <div className="mx-auto grid max-w-7xl items-center gap-12 px-5 pb-20 pt-14 sm:px-8 lg:grid-cols-12 lg:gap-8 lg:pb-28 lg:pt-20">
+      <section className="overflow-hidden">
+        <div className="mx-auto grid max-w-7xl items-center gap-10 px-4 pb-14 pt-10 sm:px-8 lg:grid-cols-12 lg:gap-6 lg:pb-20 lg:pt-14">
           <div className="lg:col-span-6">
-            <p className="eyebrow">{company.tagline} · {company.location}</p>
-            <h1 className="display mt-7 text-[3.4rem] text-palm sm:text-7xl xl:text-[5.6rem]">
-              The quiet luxury of a{" "}
-              <em className="font-normal text-brass">well-made</em> stay.
-            </h1>
-            <p className="mt-8 max-w-lg text-lg leading-relaxed text-stone-dark">
-              Hotel-grade linens, towels, amenities and room essentials — curated for
-              hotels, short-term rentals and property managers across the island.
+            <p className="inline-flex items-center gap-2 rounded-full bg-sea-light px-3.5 py-1.5 text-sm font-medium text-sea">
+              <span className="h-2 w-2 rounded-full bg-sun" aria-hidden />
+              Hotel &amp; Airbnb supplies in {company.location}
             </p>
-            <div className="mt-10 flex flex-col gap-4 sm:flex-row">
-              <Link href="/contact" className="btn-dark">
-                Request a Quote <span aria-hidden>→</span>
+            <h1 className="display mt-6 text-balance text-[2.9rem] text-ink sm:text-6xl xl:text-7xl">
+              Hotel-quality supplies, at prices that <em className="text-sea">make sense.</em>
+            </h1>
+            <p className="mt-6 max-w-xl text-lg leading-relaxed text-muted">
+              Towels, sheets, amenities and everything in between, at wholesale prices. Whether you host one
+              Airbnb or run a full hotel, we&apos;ll help you stock it right.
+            </p>
+            <div className="mt-8 flex flex-col gap-3 sm:flex-row">
+              <Link href="/catalog" className="btn-primary">
+                Browse the catalog <ArrowIcon className="h-4 w-4" />
               </Link>
-              <Link href="/collections" className="btn-outline">
-                Explore Collections
-              </Link>
+              <Link href="/contact" className="btn-secondary">Get a free quote</Link>
             </div>
-
-            <dl className="mt-14 grid max-w-lg grid-cols-3 gap-6 border-t border-palm/10 pt-8">
-              {[
-                ["Hotel", "grade quality"],
-                ["Wholesale", "volume pricing"],
-                ["Local", "island supply"],
-              ].map(([a, b]) => (
-                <div key={a}>
-                  <dt className="font-serif text-2xl text-palm sm:text-3xl">{a}</dt>
-                  <dd className="mt-1 text-[0.65rem] uppercase tracking-[0.2em] text-stone">{b}</dd>
-                </div>
-              ))}
-            </dl>
+            <p className="mt-6 text-sm text-muted">
+              Already a customer?{" "}
+              <Link href="/sign-in" className="font-semibold text-sea hover:underline">Sign in to reorder</Link>
+            </p>
           </div>
 
           <div className="relative lg:col-span-6">
-            <div className="relative mx-auto max-w-md lg:max-w-none">
-              <HeroArt className="relative z-10 h-auto w-full" />
-              <div className="absolute -left-2 bottom-2 z-20 hidden bg-ivory/95 px-6 py-5 shadow-[0_25px_50px_-20px_rgba(29,41,37,0.3)] backdrop-blur sm:block lg:-left-16">
-                <p className="eyebrow">Made for turnover</p>
-                <p className="mt-2 max-w-[13rem] font-serif text-xl leading-snug text-palm">
-                  Soft for guests. Tough enough for commercial laundry.
-                </p>
+            <div className="relative mx-auto max-w-md lg:max-w-lg">
+              <HeroArt className="h-auto w-full" />
+              <div className="absolute -left-2 bottom-8 hidden items-center gap-3 rounded-2xl bg-white p-4 pr-6 shadow-[0_20px_40px_-20px_rgba(31,42,41,0.35)] sm:flex lg:-left-10">
+                <span className="flex h-11 w-11 items-center justify-center rounded-full bg-sun-light text-[#b5761c]">
+                  <BenefitGlyph name="tag" className="h-5 w-5" />
+                </span>
+                <span>
+                  <span className="block font-semibold">Wholesale pricing</span>
+                  <span className="block text-sm text-muted">For hosts of every size</span>
+                </span>
               </div>
             </div>
           </div>
         </div>
-      </section>
 
-      {/* Audience ribbon */}
-      <section aria-label="Who we supply" className="overflow-hidden border-y border-palm/10 bg-linen py-6">
-        <div className="marquee-track flex w-max">
-          {[...audiences, ...audiences].map((a, i) => (
-            <span key={i} className="flex items-center whitespace-nowrap px-8 font-serif text-2xl italic text-palm/70">
-              {a}
-              <span className="ml-16 text-xs not-italic text-brass" aria-hidden>✦</span>
-            </span>
-          ))}
+        {/* Benefits */}
+        <div className="mx-auto max-w-7xl px-4 pb-16 sm:px-8">
+          <ul className="grid gap-3 rounded-3xl bg-shell p-3 sm:grid-cols-2 lg:grid-cols-4">
+            {benefits.map((b) => (
+              <li key={b.title} className="flex items-start gap-3.5 rounded-2xl bg-white/70 p-5">
+                <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-sea-light text-sea">
+                  <BenefitGlyph name={b.icon} className="h-5 w-5" />
+                </span>
+                <span>
+                  <span className="block font-semibold">{b.title}</span>
+                  <span className="mt-0.5 block text-sm leading-snug text-muted">{b.body}</span>
+                </span>
+              </li>
+            ))}
+          </ul>
         </div>
       </section>
 
-      {/* Collections */}
-      <section className="mx-auto max-w-7xl px-5 py-24 sm:px-8 lg:py-32">
-        <div className="flex flex-col justify-between gap-8 md:flex-row md:items-end">
-          <SectionHeading
-            eyebrow="Collections"
-            title={<>Everything a room needs, <em className="text-brass">beautifully sourced.</em></>}
-          />
-          <Link href="/collections" className="link-underline reveal self-start text-[0.72rem] font-medium uppercase tracking-[0.24em] text-palm md:self-end">
-            View all collections →
+      {/* Categories */}
+      <section className="mx-auto max-w-7xl px-4 py-16 sm:px-8 lg:py-24">
+        <div className="flex flex-col justify-between gap-6 md:flex-row md:items-end">
+          <SectionHeading eyebrow="Shop by category" title="Everything your rooms need, in one place." />
+          <Link href="/catalog" className="reveal inline-flex items-center gap-2 font-semibold text-sea hover:underline">
+            See the full catalog <ArrowIcon className="h-4 w-4" />
           </Link>
         </div>
-
-        <div className="mt-16 grid gap-x-6 gap-y-14 sm:grid-cols-2 lg:grid-cols-3">
+        <div className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {collections.map((c) => (
-            <Link key={c.slug} href={`/collections#${c.slug}`} className="group reveal block">
-              <div className={`relative flex aspect-[5/4] items-center justify-center overflow-hidden ${c.tone}`}>
-                <CollectionIcon
-                  name={c.icon}
-                  className="h-24 w-24 text-palm/70 transition-transform duration-700 ease-out group-hover:scale-110"
-                />
-                <span className="absolute left-5 top-5 text-[0.62rem] uppercase tracking-[0.28em] text-stone">
-                  {String(collections.indexOf(c) + 1).padStart(2, "0")}
-                </span>
-                <span className="absolute inset-x-0 bottom-0 h-px origin-left scale-x-0 bg-brass transition-transform duration-500 group-hover:scale-x-100" />
-              </div>
-              <div className="mt-6 flex items-baseline justify-between gap-4">
-                <h3 className="font-serif text-3xl text-palm">{c.name}</h3>
-                <span className="text-brass transition-transform duration-300 group-hover:translate-x-1" aria-hidden>→</span>
-              </div>
-              <p className="mt-2 text-sm leading-relaxed text-stone-dark">{c.description}</p>
+            <Link key={c.slug} href={`/catalog#${c.slug}`} className="card group reveal flex items-center gap-5 p-5 transition hover:-translate-y-0.5 hover:border-sea/30 hover:shadow-[0_18px_40px_-24px_rgba(31,42,41,0.35)] sm:p-6">
+              <span className={`flex h-20 w-20 shrink-0 items-center justify-center rounded-2xl ${c.tint}`}>
+                <CollectionIcon name={c.icon} className="h-12 w-12" />
+              </span>
+              <span className="min-w-0 flex-1">
+                <span className="block font-display text-xl">{c.name}</span>
+                <span className="mt-1 block text-sm leading-snug text-muted">{c.description}</span>
+              </span>
+              <ArrowIcon className="h-5 w-5 shrink-0 text-ink/25 transition group-hover:translate-x-1 group-hover:text-sea" />
             </Link>
           ))}
         </div>
       </section>
 
-      {/* Why Isla Prime */}
-      <section className="bg-palm text-ivory">
-        <div className="mx-auto grid max-w-7xl gap-16 px-5 py-24 sm:px-8 lg:grid-cols-12 lg:py-32">
-          <div className="lg:col-span-5">
-            <SectionHeading
-              light
-              eyebrow="Why Isla Prime"
-              title={<>Five-star standards, <em className="text-brass-light">island-made service.</em></>}
-              intro="Guests notice the details — the weight of a towel, the crispness of a sheet, the scent in the shower. We help you get every one of them right, every time."
-            />
-          </div>
-          <div className="grid gap-px self-end bg-ivory/10 sm:grid-cols-2 lg:col-span-7">
-            {pillars.map((p, i) => (
-              <div key={p.title} className="reveal bg-palm p-8 sm:p-10">
-                <span className="font-serif text-lg italic text-brass-light">0{i + 1}</span>
-                <h3 className="mt-4 font-serif text-2xl">{p.title}</h3>
-                <p className="mt-3 text-sm leading-relaxed text-ivory/65">{p.body}</p>
-              </div>
-            ))}
+      {/* Starter list planner */}
+      <section id="planner" className="scroll-mt-28 bg-sea-light/60">
+        <div className="mx-auto max-w-7xl px-4 py-16 sm:px-8 lg:py-24">
+          <SectionHeading
+            eyebrow="Not sure where to start?"
+            title="Build your starter list in seconds."
+            intro="Set up a new rental or refresh an old one. Tell us the size of your place and we'll show you how much to stock."
+          />
+          <div className="reveal mt-10">
+            <StarterPlanner />
           </div>
         </div>
       </section>
 
-      {/* Industries */}
-      <section id="industries" className="scroll-mt-28 mx-auto max-w-7xl px-5 py-24 sm:px-8 lg:py-32">
-        <SectionHeading
-          align="center"
-          eyebrow="Who we serve"
-          title={<>Built for every kind of <em className="text-brass">stay.</em></>}
-          intro="From a single beachfront apartment to a full-service resort, we tailor supply to the way your property runs."
-        />
-        <div className="mt-20 grid gap-6 lg:grid-cols-3">
-          {industries.map((ind) => (
-            <article key={ind.title} className="reveal group flex flex-col border border-palm/10 bg-white/40 p-9 transition-colors duration-500 hover:border-brass/50 hover:bg-white/80 sm:p-10">
-              <span className="font-serif text-5xl font-light text-sand">{ind.eyebrow}</span>
-              <h3 className="mt-8 font-serif text-3xl text-palm">{ind.title}</h3>
-              <p className="mt-4 text-sm leading-relaxed text-stone-dark">{ind.body}</p>
-              <ul className="mt-8 space-y-3 border-t border-palm/10 pt-8">
-                {ind.points.map((pt) => (
-                  <li key={pt} className="flex items-center gap-3 text-sm text-palm">
-                    <span className="h-px w-5 bg-brass" aria-hidden />
-                    {pt}
+      {/* Who we help */}
+      <section className="mx-auto max-w-7xl px-4 py-16 sm:px-8 lg:py-24">
+        <SectionHeading align="center" eyebrow="Who we help" title="Made for hosts of every size." />
+        <div className="mt-10 grid gap-4 lg:grid-cols-3">
+          {audiences.map((a) => (
+            <article key={a.title} className="card reveal flex flex-col p-7 sm:p-8">
+              <h3 className="font-display text-2xl">{a.title}</h3>
+              <p className="mt-3 leading-relaxed text-muted">{a.body}</p>
+              <ul className="mt-6 space-y-2.5">
+                {a.points.map((p) => (
+                  <li key={p} className="flex items-center gap-2.5">
+                    <CheckIcon className="h-5 w-5 shrink-0 text-sea" />
+                    {p}
                   </li>
                 ))}
               </ul>
@@ -166,49 +129,59 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Process */}
-      <section id="process" className="scroll-mt-28 border-t border-palm/10 bg-linen">
-        <div className="mx-auto max-w-7xl px-5 py-24 sm:px-8 lg:py-32">
-          <SectionHeading
-            eyebrow="How it works"
-            title={<>Stocked in <em className="text-brass">three simple steps.</em></>}
-          />
-          <ol className="mt-16 grid gap-12 md:grid-cols-3 md:gap-8">
+      {/* How ordering works */}
+      <section className="bg-shell">
+        <div className="mx-auto max-w-7xl px-4 py-16 sm:px-8 lg:py-24">
+          <SectionHeading eyebrow="How ordering works" title="Simple from the first message." />
+          <ol className="mt-10 grid gap-4 md:grid-cols-3">
             {steps.map((s, i) => (
-              <li key={s.title} className="reveal relative">
-                <div className="flex items-center gap-5">
-                  <span className="flex h-14 w-14 shrink-0 items-center justify-center rounded-full border border-brass font-serif text-2xl text-brass">
-                    {i + 1}
-                  </span>
-                  {i < steps.length - 1 && <span className="hidden h-px flex-1 bg-palm/15 md:block" aria-hidden />}
-                </div>
-                <h3 className="mt-8 font-serif text-2xl text-palm">{s.title}</h3>
-                <p className="mt-3 max-w-xs text-sm leading-relaxed text-stone-dark">{s.body}</p>
+              <li key={s.title} className="reveal rounded-3xl bg-white/70 p-7">
+                <span className="flex h-11 w-11 items-center justify-center rounded-full bg-sun font-display text-xl text-ink">{i + 1}</span>
+                <h3 className="mt-5 font-display text-xl">{s.title}</h3>
+                <p className="mt-2 leading-relaxed text-muted">{s.body}</p>
               </li>
             ))}
           </ol>
         </div>
       </section>
 
-      {/* Quote */}
-      <section id="quote" className="scroll-mt-28 bg-palm-soft text-ivory">
-        <div className="mx-auto grid max-w-7xl gap-16 px-5 py-24 sm:px-8 lg:grid-cols-12 lg:py-32">
-          <div className="lg:col-span-4">
-            <SectionHeading
-              light
-              eyebrow="Wholesale inquiries"
-              title={<>Let&apos;s outfit your <em className="text-brass-light">property.</em></>}
-              intro="Tell us a little about your property and we'll prepare a tailored selection with wholesale pricing."
-            />
-            <div className="reveal mt-10 space-y-2 text-sm text-ivory/70">
-              <p><a href={`mailto:${company.email}`} className="link-underline">{company.email}</a></p>
-              <p>{company.phone}</p>
-              <p className="text-ivory/45">{company.hours}</p>
+      {/* Returning customers */}
+      <section className="mx-auto max-w-7xl px-4 py-16 sm:px-8 lg:py-24">
+        <div className="reveal grid items-center gap-10 overflow-hidden rounded-[2rem] bg-sea p-8 text-white sm:p-12 lg:grid-cols-2">
+          <div>
+            <p className="eyebrow !text-sun">For frequent customers</p>
+            <h2 className="display mt-3 text-balance text-4xl sm:text-5xl">Order often? Make it effortless.</h2>
+            <p className="mt-4 max-w-md text-lg text-white/80">
+              With an Isla Prime account, restocking your properties takes minutes.
+            </p>
+            <div className="mt-8 flex flex-col gap-3 sm:flex-row">
+              <Link href="/sign-in" className="btn-sun">Sign in</Link>
+              <Link href="/contact" className="btn-ghost-light">Request an account</Link>
             </div>
           </div>
-          <div className="lg:col-span-7 lg:col-start-6">
-            <QuoteForm dark />
+          <ul className="grid gap-3">
+            {accountPerks.map((p) => (
+              <li key={p} className="flex items-center gap-3 rounded-2xl bg-white/10 px-5 py-4">
+                <CheckIcon className="h-5 w-5 shrink-0 text-sun" />
+                {p}
+              </li>
+            ))}
+          </ul>
+        </div>
+      </section>
+
+      {/* Contact strip */}
+      <section className="border-t border-ink/[0.06]">
+        <div className="mx-auto flex max-w-7xl flex-col gap-8 px-4 py-14 sm:px-8 lg:flex-row lg:items-center lg:justify-between">
+          <div>
+            <h2 className="display text-3xl sm:text-4xl">Questions? Just ask.</h2>
+            <p className="mt-2 text-muted">Real people, happy to help you figure out what you need.</p>
           </div>
+          <ul className="flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:gap-6">
+            <li className="flex items-center gap-2.5"><MailIcon className="h-5 w-5 text-sea" /><span className="select-all">{company.email}</span></li>
+            <li className="flex items-center gap-2.5"><PhoneIcon className="h-5 w-5 text-sea" /><span className="select-all">{company.phone}</span></li>
+            <li className="flex items-center gap-2.5"><ClockIcon className="h-5 w-5 text-sea" />{company.hours}</li>
+          </ul>
         </div>
       </section>
     </>
