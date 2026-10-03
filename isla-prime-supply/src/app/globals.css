@@ -1,0 +1,140 @@
+@import "tailwindcss";
+
+@theme {
+  --color-ivory: #f8f5ef;
+  --color-linen: #efe8dc;
+  --color-sand-100: #e9dfcf;
+  --color-sand: #d6c6ab;
+  --color-mist: #e4e6e0;
+  --color-stone: #857b6c;
+  --color-stone-dark: #5f574b;
+  --color-palm: #1d2925;
+  --color-palm-soft: #2a3934;
+  --color-brass: #a8865a;
+  --color-brass-light: #c8ad84;
+
+  --font-serif: var(--font-cormorant), "Cormorant Garamond", Georgia, serif;
+  --font-sans: var(--font-jost), "Jost", ui-sans-serif, system-ui, sans-serif;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background-color: var(--color-ivory);
+  color: var(--color-palm);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+}
+
+::selection {
+  background: var(--color-brass-light);
+  color: var(--color-palm);
+}
+
+@utility eyebrow {
+  @apply font-sans text-[0.7rem] font-medium uppercase tracking-[0.32em] text-brass;
+}
+
+@utility display {
+  @apply font-serif font-light leading-[1.02] tracking-[-0.01em];
+}
+
+@utility btn {
+  @apply inline-flex items-center justify-center gap-3 px-7 py-3.5 font-sans text-[0.72rem] font-medium uppercase tracking-[0.24em] transition-colors duration-300;
+}
+
+@utility btn-dark {
+  @apply btn bg-palm text-ivory hover:bg-brass;
+}
+
+@utility btn-light {
+  @apply btn bg-ivory text-palm hover:bg-brass hover:text-ivory;
+}
+
+@utility btn-outline {
+  @apply btn border border-palm/30 text-palm hover:border-palm hover:bg-palm hover:text-ivory;
+}
+
+@utility btn-outline-light {
+  @apply btn border border-ivory/30 text-ivory hover:border-ivory hover:bg-ivory hover:text-palm;
+}
+
+@utility link-underline {
+  @apply relative inline-block after:absolute after:-bottom-1 after:left-0 after:h-px after:w-full after:origin-left after:scale-x-0 after:bg-current after:transition-transform after:duration-300 hover:after:scale-x-100;
+}
+
+@utility field {
+  @apply w-full border-0 border-b border-palm/25 bg-transparent px-0 py-3 font-sans text-base text-palm transition-colors placeholder:text-stone/70 focus:border-brass focus:outline-none focus:ring-0;
+}
+
+@utility field-label {
+  @apply block font-sans text-[0.68rem] font-medium uppercase tracking-[0.24em] text-stone;
+}
+
+/* Gentle fade-up as sections scroll into view. CSS-only, so it works even
+   before (or without) JavaScript; browsers without scroll-driven animations
+   simply show the content. */
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    .reveal {
+      animation: reveal linear both;
+      animation-timeline: view();
+      animation-range: entry 0% entry 40%;
+    }
+  }
+}
+
+@keyframes reveal {
+  from {
+    opacity: 0;
+    transform: translateY(28px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* Slow scrolling ribbon of client types. */
+@keyframes marquee {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+.marquee-track {
+  animation: marquee 40s linear infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .marquee-track {
+    animation: none;
+  }
+}
+
+/* Mobile menu built on <details>, so it works without JavaScript. */
+.menu > summary {
+  list-style: none;
+}
+.menu > summary::-webkit-details-marker {
+  display: none;
+}
+
+/* Subtle paper grain for warmth. */
+.grain {
+  position: relative;
+}
+.grain::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0.35;
+  mix-blend-mode: multiply;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0.5 0 0 0 0 0.45 0 0 0 0 0.4 0 0 0 0.08 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
